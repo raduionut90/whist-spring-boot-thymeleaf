@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Whist Card Game</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.css}" />
+</head>
+<body>
+    <h2>Welcome to Whist</h2>
+    <br><br>
+    <h3>You want to play Whist?</h3>
+    <br>
+    <a th:href="@{/game/newgame/3}" class="btn btn-primary btn-sm mb-3">3 players</a>
+    <a th:href="@{/game/newgame/4}" class="btn btn-primary btn-sm mb-3">4 players</a>
+    <a th:href="@{/game/newgame/5}" class="btn btn-primary btn-sm mb-3">5 players</a>
+    <a th:href="@{/game/newgame/6}" class="btn btn-primary btn-sm mb-3">6 players</a>
+    <br>
+
+
+</body>
+</html>
