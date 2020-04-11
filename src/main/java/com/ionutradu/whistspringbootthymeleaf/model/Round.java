@@ -25,17 +25,17 @@ public class Round {
     private String id;
 
     private int nrMaini;
-    private List<Hand> handsList = new ArrayList<>();
+    private List<String> handsList = new ArrayList<>();
     private Map<Player, Integer> mapVotate = new HashMap<>();
     private int votatePanaAcum;
-    private Card atu;
-    private List<Card> listaCarti;
+    private String atu;
+    private List<String> listaCarti;
     private Map<Player, Integer> mainiCastigate = new HashMap<>();
 
     public Round() {
     }
 
-    public Round(int nrMaini, List<Card> colectieCarti) {
+    public Round(int nrMaini, List<String> colectieCarti) {
         this.nrMaini = nrMaini;
         this.listaCarti = new ArrayList<>(colectieCarti);
         this.atu = setAtuu();
@@ -57,11 +57,11 @@ public class Round {
         this.nrMaini = nrMaini;
     }
 
-    public List<Hand> getHandsList() {
+    public List<String> getHandsList() {
         return handsList;
     }
 
-    public void setHandsList(List<Hand> handsList) {
+    public void setHandsList(List<String> handsList) {
         this.handsList = handsList;
     }
 
@@ -81,14 +81,14 @@ public class Round {
         this.votatePanaAcum = votatePanaAcum;
     }
 
-    public Card getAtu() {
+    public String getAtu() {
         return atu;
     }
 
-    private Card setAtuu(){
+    private String setAtuu(){
         if (nrMaini!=8) {
             Collections.shuffle(listaCarti);
-            Card atu = listaCarti.get(0);
+            String atu = listaCarti.get(0);
             listaCarti.remove(0);
             return atu;
         } else {
@@ -96,11 +96,11 @@ public class Round {
         }
     }
 
-    public List<Card> getColectieCarti() {
+    public List<String> getColectieCarti() {
         return listaCarti;
     }
 
-    public void setColectieCarti(List<Card> colectieCarti) {
+    public void setColectieCarti(List<String> colectieCarti) {
         this.listaCarti = colectieCarti;
     }
 

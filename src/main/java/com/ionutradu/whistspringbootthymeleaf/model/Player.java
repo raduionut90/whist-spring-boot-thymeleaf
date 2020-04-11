@@ -10,13 +10,13 @@ import java.util.*;
 public class Player {
 
     @Id
-    private String id;
+    private String _id;
 
     private String nume;
     private int puncteCastigate;
     private boolean first = false;
     private boolean last = false;
-    private List<Card> cartiCurente = new ArrayList<>();
+    private List<String> cartiCurente = new ArrayList<>();
 
     public Player(String nume) {
         this.nume = nume;
@@ -28,12 +28,12 @@ public class Player {
   //      return "Jucatorul " + nume + " puncte: " + puncteCastigate + " are cartile: " + cartiCurente.toString();
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getNume() {
@@ -68,11 +68,11 @@ public class Player {
         this.last = last;
     }
 
-    public List<Card> getCartiCurente() {
+    public List<String> getCartiCurente() {
         return cartiCurente;
     }
 
-    public void setCartiCurente(List<Card> cartiCurente) {
+    public void setCartiCurente(List<String> cartiCurente) {
         this.cartiCurente = cartiCurente;
     }
 }

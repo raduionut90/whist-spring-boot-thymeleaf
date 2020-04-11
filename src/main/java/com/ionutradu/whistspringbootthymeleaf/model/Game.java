@@ -2,7 +2,6 @@
 package com.ionutradu.whistspringbootthymeleaf.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.*;
@@ -11,19 +10,16 @@ import java.util.*;
 public class Game {
 
     @Id
-    private String id;
+    private String _id;
 
     private int playersNumber;
     private int[] rounds;
 
-    @DBRef(db = "card")
     private List<String> roundsList = new ArrayList<>();
 
-    @DBRef(db = "player")
-    private List<Player> playersList = new ArrayList<>();
+    private List<String> playersList = new ArrayList<>();
 
-    @DBRef(db = "card")
-    private List<Card> cardsList = new ArrayList<>();
+    private List<String> cardsList = new ArrayList<>();
 
     public Game() {
     }
@@ -54,12 +50,12 @@ public class Game {
         }
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public int getPlayersNumber() {
@@ -86,26 +82,26 @@ public class Game {
         this.roundsList = roundsList;
     }
 
-    public List<Player> getPlayersList() {
+    public List<String> getPlayersList() {
         return playersList;
     }
 
-    public void setPlayersList(List<Player> playersList) {
+    public void setPlayersList(List<String> playersList) {
         this.playersList = playersList;
     }
 
-    public List<Card> getCardsList() {
+    public List<String> getCardsList() {
         return cardsList;
     }
 
-    public void setCardsList(List<Card> cardsList) {
+    public void setCardsList(List<String> cardsList) {
         this.cardsList = cardsList;
     }
 
     @Override
     public String toString() {
         return "Game{" +
-                "id='" + id + '\'' +
+                "id='" + _id + '\'' +
                 ", numarJucatori=" + playersNumber +
                 ", distribuiri=" + Arrays.toString(rounds) +
                 ", idDistribuiri=" + roundsList +

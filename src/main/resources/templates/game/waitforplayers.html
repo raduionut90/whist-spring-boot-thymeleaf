@@ -7,14 +7,19 @@
 </head>
 <body>
 <h2>sda</h2>
-<h2 th:text="'Game id : ' + ${game.getId()}" />
+<h2 th:text="'Game id : ' + ${game.get_id()}" />
 <span th:text="'Players nr. : ' + ${game.getPlayersNumber()}" />
 <br>
 <h2>players:</h2>
-<span th:each="player : ${game.getPlayersList()}" th:text="${player}"/>
+<p th:each="player : ${Players}" th:text="${player.toString()} " />
+
 
 <br><br>
-<a th:href="@{'/game/play/' + ${game.getId()} + '/0'}" class="btn btn-primary btn-sm mb-3">Play</a>
+<form th:action="@{start}" th:method="POST">
+    <input th:if="${game.getPlayersList().size() == game.getPlayersNumber()}" type="submit" value="Start" class="btn btn-primary btn-sm mb-3"/>
+</form>
+
+<!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/0'}" class="btn btn-primary btn-sm mb-3">Play</a>-->
 
 </body>
 </html>

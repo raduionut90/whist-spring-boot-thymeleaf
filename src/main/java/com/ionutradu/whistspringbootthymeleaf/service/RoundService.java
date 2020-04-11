@@ -42,8 +42,8 @@ public class RoundService {
         }
 
         for (int i = 0; i < round.getNrMaini(); i++) {
-            for (Player player : game.getPlayersList()) {
-                Card nextCard = round.getColectieCarti().get(0);
+            for (String player : game.getPlayersList()) {
+                String nextCard = round.getColectieCarti().get(0);
                 playerService.jucatorPreiaCartea(player, nextCard);
                 round.getColectieCarti().remove(nextCard);
                 roundRepository.save(round);

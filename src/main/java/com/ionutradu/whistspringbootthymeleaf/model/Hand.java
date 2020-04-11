@@ -13,14 +13,14 @@ public class Hand {
     @Id
     private String id;
 
-    private Card atu;
-    private Card culoare;   //culoarea
+    private String atu;
+    private String culoare;   //culoarea
     private Map<Player, Card> cartiJucatori = new LinkedHashMap<>();
 
     public Hand() {
     }
 
-    public Hand(Card atu) {
+    public Hand(String atu) {
         this.atu = atu;
     }
 
@@ -32,19 +32,19 @@ public class Hand {
         this.id = id;
     }
 
-    public Card getAtu() {
+    public String getAtu() {
         return atu;
     }
 
-    public void setAtu(Card atu) {
+    public void setAtu(String atu) {
         this.atu = atu;
     }
 
-    public Card getCuloare() {
+    public String getCuloare() {
         return culoare;
     }
 
-    public void setCuloare(Card culoare) {
+    public void setCuloare(String culoare) {
         this.culoare = culoare;
     }
 

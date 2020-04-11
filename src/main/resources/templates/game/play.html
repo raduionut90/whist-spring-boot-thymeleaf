@@ -6,25 +6,26 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
 </head>
 <body>
-<h2 th:text="'Round id : ' + ${round.getId()}" />
-<span th:text="'Hand nr. : ' + ${round.getNrMaini()}" />
-<br>
-<span th:if="${round.getAtu() != null}" th:text="'Atu : ' + ${cardService.showCard(round.getAtu())}" />
+<h2>play</h2>
+<!--<h2 th:text="'Round id : ' + ${round.getId()}" />-->
+<!--<span th:text="'Hand nr. : ' + ${round.getNrMaini()}" />-->
+<!--<br>-->
+<!--<span th:if="${round.getAtu() != null}" th:text="'Atu : ' + ${cardService.showCard(round.getAtu())}" />-->
 
-<table border="1">
-    <tr>
-        <td>Player Name</td>
-        <td>Card </td>
-    </tr>
-    <tr th:each="players : ${players}">
-        <td th:text="${players}" />
-        <td th:each="card : ${players.getCartiCurente()}" th:text="${cardService.showCard(card)}"/>
+<!--<table border="1">-->
+<!--    <tr>-->
+<!--        <td>Player Name</td>-->
+<!--        <td>Card </td>-->
+<!--    </tr>-->
+<!--    <tr th:each="players : ${players}">-->
+<!--        <td th:text="${players}" />-->
+<!--        <td th:each="card : ${players.getCartiCurente()}" th:text="${cardService.showCard(card)}"/>-->
 
-    </tr>
-</table>
+<!--    </tr>-->
+<!--</table>-->
 <br><br>
 <h4>Next Round</h4>
-<a th:href="@{'/game/play/' + ${game.getId()} + '/' + ${roundNr+1}}" class="btn btn-primary btn-sm mb-3">Play</a>
+<!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/' + ${roundNr+1}}" class="btn btn-primary btn-sm mb-3">Play</a>-->
 
 </body>
 </html>

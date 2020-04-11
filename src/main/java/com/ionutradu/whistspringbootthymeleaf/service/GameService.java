@@ -25,37 +25,40 @@ public class GameService {
     HandRepository handRepository;
 
     public void joinPlayer(String gameId, Authentication authentication){
-        Game game = gameRepository.findById(gameId).orElse(null);
         Player player = new Player(authentication.getName());
-        if (playerRepository.findAll().size() == 1){
+        playerRepository.save(player);
+
+        Game game = gameRepository.findById(gameId).orElse(null);
+        game.getPlayersList().add(player.get_id());
+        gameRepository.save(game);
+
+        if (game.getPlayersList().size() == 1){
             player.setFirst(true);
         }
-        if (playerRepository.findAll().size() == game.getPlayersNumber()){
+        if (game.getPlayersList().size() == game.getPlayersNumber()){
             player.setLast(true);
             genereazaCarti(game);
             genereazaRunde(game);
             genereazaMaini(game);
         }
-        game.getPlayersList().add(player);
         playerRepository.save(player);
-        gameRepository.save(game);
     }
 
-    public void genereazaJucatori(Game game){
-        for(int i = 0; i<game.getPlayersNumber(); i++){
-            Player player = new Player( "Player " + (i+1));
-            playerRepository.save(player);
-            game.getPlayersList().add(player);
-        }
-        Player firstPlayer = game.getPlayersList().get(0);
-        firstPlayer.setFirst(true);
-        playerRepository.save(firstPlayer);
-
-        int lastPlayerId = game.getPlayersList().size() - 1;
-        Player lastPlayer = game.getPlayersList().get(lastPlayerId);
-        lastPlayer.setLast(true);
-        playerRepository.save(lastPlayer);
-    }
+//    public void genereazaJucatori(Game game){
+//        for(int i = 0; i<game.getPlayersNumber(); i++){
+//            Player player = new Player( "Player " + (i+1));
+//            playerRepository.save(player);
+//            game.getPlayersList().add(player.get_id());
+//        }
+//        Player firstPlayer = game.getPlayersList().get(0);
+//        firstPlayer.setFirst(true);
+//        playerRepository.save(firstPlayer);
+//
+//        int lastPlayerId = game.getPlayersList().size() - 1;
+//        Player lastPlayer = game.getPlayersList().get(lastPlayerId);
+//        lastPlayer.setLast(true);
+//        playerRepository.save(lastPlayer);
+//    }
 
     public void genereazaCarti(Game game){
         if(game.getPlayersNumber()==3){
@@ -64,7 +67,7 @@ public class GameService {
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getCardsList().add(card);
+                    game.getCardsList().add(card.getId());
                 }
             }
         }
@@ -73,7 +76,7 @@ public class GameService {
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getCardsList().add(card);
+                    game.getCardsList().add(card.getId());
                 }
             }
         }
@@ -82,7 +85,7 @@ public class GameService {
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getCardsList().add(card);
+                    game.getCardsList().add(card.getId());
                 }
             }
         }
@@ -91,7 +94,7 @@ public class GameService {
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getCardsList().add(card);
+                    game.getCardsList().add(card.getId());
                 }
             }
         }
@@ -113,7 +116,7 @@ public class GameService {
             for (int i = 0; i < round.getNrMaini(); i++) {
                 Hand hand = new Hand(round.getAtu());
                 handRepository.save(hand);
-                round.getHandsList().add(hand);
+                round.getHandsList().add(hand.getAtu());
                 roundRepository.save(round);
             }
         }

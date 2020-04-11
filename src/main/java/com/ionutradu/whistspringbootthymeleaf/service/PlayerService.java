@@ -23,21 +23,24 @@ public class PlayerService {
     @Autowired
     RoundService roundService;
 
-    public void jucatorPreiaCartea(Player player, Card nextCard) {
-            player.getCartiCurente().add(nextCard);
-            playerRepository.save(player);
+    public void jucatorPreiaCartea(String playerId, String nextCard) {
+        Player player = playerRepository.findBy_id(playerId);
+        player.getCartiCurente().add(nextCard);
+        playerRepository.save(player);
     }
 
     public List<Player> getAllPlayerFromGame(Game game){
         List<Player> playerList = new ArrayList<>();
-        for (Player player: game.getPlayersList()) {
+        for (String playerId: game.getPlayersList()) {
+            Player player = playerRepository.findBy_id(playerId);
             playerList.add(player);
         }
         return playerList;
     }
 
     public void clearCartiCurente(Game game){
-        for (Player player : game.getPlayersList()) {
+        for (String playerId : game.getPlayersList()) {
+            Player player = playerRepository.findBy_id(playerId);
             player.getCartiCurente().clear();
             playerRepository.save(player);
 
