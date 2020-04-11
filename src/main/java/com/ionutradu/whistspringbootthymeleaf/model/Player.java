@@ -1,5 +1,5 @@
 
-package com.ionutradu.whistspringbootthymeleaf.documents;
+package com.ionutradu.whistspringbootthymeleaf.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,7 +16,7 @@ public class Player {
     private int puncteCastigate;
     private boolean first = false;
     private boolean last = false;
-    private List<String> cartiCurente = new ArrayList<>();
+    private List<Card> cartiCurente = new ArrayList<>();
 
     public Player(String nume) {
         this.nume = nume;
@@ -68,11 +68,11 @@ public class Player {
         this.last = last;
     }
 
-    public List<String> getCartiCurente() {
+    public List<Card> getCartiCurente() {
         return cartiCurente;
     }
 
-    public void setCartiCurente(List<String> cartiCurente) {
+    public void setCartiCurente(List<Card> cartiCurente) {
         this.cartiCurente = cartiCurente;
     }
 }

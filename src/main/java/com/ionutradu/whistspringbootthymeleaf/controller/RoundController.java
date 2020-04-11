@@ -1,8 +1,8 @@
 package com.ionutradu.whistspringbootthymeleaf.controller;
 
-import com.ionutradu.whistspringbootthymeleaf.documents.Game;
-import com.ionutradu.whistspringbootthymeleaf.documents.Player;
-import com.ionutradu.whistspringbootthymeleaf.documents.Round;
+import com.ionutradu.whistspringbootthymeleaf.model.Game;
+import com.ionutradu.whistspringbootthymeleaf.model.Player;
+import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
 import com.ionutradu.whistspringbootthymeleaf.service.CardService;
@@ -39,7 +39,7 @@ public class RoundController {
     @GetMapping("/play/{gameId}/{roundNr}")
     public String play(@PathVariable String gameId, @PathVariable int roundNr, Model model){
         Game game = gameRepository.findById(gameId).orElse(null);
-        String roundId = game.getIdDistribuiri().get(roundNr);
+        String roundId = game.getRoundsList().get(roundNr);
         Round round = roundRepository.findById(roundId);
 
 

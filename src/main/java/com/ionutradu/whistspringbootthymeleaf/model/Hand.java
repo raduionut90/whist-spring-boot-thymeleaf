@@ -1,10 +1,9 @@
 
-package com.ionutradu.whistspringbootthymeleaf.documents;
+package com.ionutradu.whistspringbootthymeleaf.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,15 +13,15 @@ public class Hand {
     @Id
     private String id;
 
-    private String atuId;
+    private Card atu;
     private Card culoare;   //culoarea
     private Map<Player, Card> cartiJucatori = new LinkedHashMap<>();
 
     public Hand() {
     }
 
-    public Hand(String atuId) {
-        this.atuId = atuId;
+    public Hand(Card atu) {
+        this.atu = atu;
     }
 
     public String getId() {
@@ -33,12 +32,12 @@ public class Hand {
         this.id = id;
     }
 
-    public String getAtu() {
-        return atuId;
+    public Card getAtu() {
+        return atu;
     }
 
-    public void setAtu(String atu) {
-        this.atuId = atu;
+    public void setAtu(Card atu) {
+        this.atu = atu;
     }
 
     public Card getCuloare() {

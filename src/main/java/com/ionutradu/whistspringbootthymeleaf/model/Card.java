@@ -1,5 +1,5 @@
 
-package com.ionutradu.whistspringbootthymeleaf.documents;
+package com.ionutradu.whistspringbootthymeleaf.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

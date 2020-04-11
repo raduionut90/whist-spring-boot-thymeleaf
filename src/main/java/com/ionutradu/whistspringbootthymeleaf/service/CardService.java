@@ -1,6 +1,6 @@
 package com.ionutradu.whistspringbootthymeleaf.service;
 
-import com.ionutradu.whistspringbootthymeleaf.documents.Card;
+import com.ionutradu.whistspringbootthymeleaf.model.Card;
 import com.ionutradu.whistspringbootthymeleaf.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

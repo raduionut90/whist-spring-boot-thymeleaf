@@ -1,8 +1,9 @@
 package com.ionutradu.whistspringbootthymeleaf.service;
 
-import com.ionutradu.whistspringbootthymeleaf.documents.*;
+import com.ionutradu.whistspringbootthymeleaf.model.*;
 import com.ionutradu.whistspringbootthymeleaf.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,81 +24,96 @@ public class GameService {
     @Autowired
     HandRepository handRepository;
 
+    public void joinPlayer(String gameId, Authentication authentication){
+        Game game = gameRepository.findById(gameId).orElse(null);
+        Player player = new Player(authentication.getName());
+        if (playerRepository.findAll().size() == 1){
+            player.setFirst(true);
+        }
+        if (playerRepository.findAll().size() == game.getPlayersNumber()){
+            player.setLast(true);
+            genereazaCarti(game);
+            genereazaRunde(game);
+            genereazaMaini(game);
+        }
+        game.getPlayersList().add(player);
+        playerRepository.save(player);
+        gameRepository.save(game);
+    }
+
     public void genereazaJucatori(Game game){
-        for(int i=0; i<game.getNumarJucatori(); i++){
+        for(int i = 0; i<game.getPlayersNumber(); i++){
             Player player = new Player( "Player " + (i+1));
             playerRepository.save(player);
-            game.getIdJucatori().add(player.getId());
+            game.getPlayersList().add(player);
         }
-        String firstPlayerId = game.getIdJucatori().get(0);
-        Player firstPlayer = playerRepository.findById(firstPlayerId);
+        Player firstPlayer = game.getPlayersList().get(0);
         firstPlayer.setFirst(true);
         playerRepository.save(firstPlayer);
 
-        int lastIdFromIdJucatori = game.getIdJucatori().size()-1;
-        String lastPlayerId = game.getIdJucatori().get(lastIdFromIdJucatori);
-        Player lastPlayer = playerRepository.findById(lastPlayerId);
+        int lastPlayerId = game.getPlayersList().size() - 1;
+        Player lastPlayer = game.getPlayersList().get(lastPlayerId);
         lastPlayer.setLast(true);
         playerRepository.save(lastPlayer);
     }
 
     public void genereazaCarti(Game game){
-        if(game.getNumarJucatori()==3){
+        if(game.getPlayersNumber()==3){
             //daca sunt 3 jucatori, genereaza cartile de la 9 la AS
             for(int i=6; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getIdCarti().add(card.getId());
+                    game.getCardsList().add(card);
                 }
             }
         }
-        if (game.getNumarJucatori()==4){
+        if (game.getPlayersNumber()==4){
             for(int i=4; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getIdCarti().add(card.getId());
+                    game.getCardsList().add(card);
                 }
             }
         }
-        if (game.getNumarJucatori()==5){
+        if (game.getPlayersNumber()==5){
             for(int i=2; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getIdCarti().add(card.getId());
+                    game.getCardsList().add(card);
                 }
             }
         }
-        if (game.getNumarJucatori()==6){
+        if (game.getPlayersNumber()==6){
             for(int i=0; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
                     cardRepository.save(card);
-                    game.getIdCarti().add(card.getId());
+                    game.getCardsList().add(card);
                 }
             }
         }
     }
 
     public void genereazaRunde(Game game){
-        int nrRunde = game.getDistribuiri().length;
+        int nrRunde = game.getRounds().length;
         for (int i = 0; i < nrRunde; i++) {
-            Round round = new Round(game.getDistribuiri()[i], game.getIdCarti());
+            Round round = new Round(game.getRounds()[i], game.getCardsList());
             roundRepository.save(round);
-            game.getIdDistribuiri().add(round.getId());
+            game.getRoundsList().add(round.getId());
         }
     }
 
     public void genereazaMaini(Game game) {
-        for (String roundId : game.getIdDistribuiri()) {
+        for (String roundId : game.getRoundsList()) {
             Round round = roundRepository.findById(roundId);
 
             for (int i = 0; i < round.getNrMaini(); i++) {
-                Hand hand = new Hand(round.getAtuu());
+                Hand hand = new Hand(round.getAtu());
                 handRepository.save(hand);
-                round.getHandsListId().add(hand.getId());
+                round.getHandsList().add(hand);
                 roundRepository.save(round);
             }
         }

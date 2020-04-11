@@ -1,9 +1,10 @@
 package com.ionutradu.whistspringbootthymeleaf.service;
 
 
-import com.ionutradu.whistspringbootthymeleaf.documents.Game;
-import com.ionutradu.whistspringbootthymeleaf.documents.Player;
-import com.ionutradu.whistspringbootthymeleaf.documents.Round;
+import com.ionutradu.whistspringbootthymeleaf.model.Card;
+import com.ionutradu.whistspringbootthymeleaf.model.Game;
+import com.ionutradu.whistspringbootthymeleaf.model.Player;
+import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.PlayerRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
@@ -34,19 +35,17 @@ public class RoundService {
     }
 
     public void distribuieCarti(Round round) {
-        Game game = gameRepository.findGameByIdDistribuiriContains(round.getId());
+        Game game = gameRepository.findGameByRoundsIs(round);
         playerService.clearCartiCurente(game);
         if (round.getNrMaini() == 8){
             Collections.shuffle(round.getColectieCarti());
         }
 
         for (int i = 0; i < round.getNrMaini(); i++) {
-            for (String playerID : game.getIdJucatori()) {
-                Player player = playerRepository.findById(playerID);
-
-                String nextCardId = round.getColectieCarti().get(0);
-                playerService.jucatorPreiaCartea(player, nextCardId);
-                round.getColectieCarti().remove(nextCardId);
+            for (Player player : game.getPlayersList()) {
+                Card nextCard = round.getColectieCarti().get(0);
+                playerService.jucatorPreiaCartea(player, nextCard);
+                round.getColectieCarti().remove(nextCard);
                 roundRepository.save(round);
             }
         }

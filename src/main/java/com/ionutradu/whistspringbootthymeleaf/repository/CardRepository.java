@@ -1,6 +1,6 @@
 package com.ionutradu.whistspringbootthymeleaf.repository;
 
-import com.ionutradu.whistspringbootthymeleaf.documents.Card;
+import com.ionutradu.whistspringbootthymeleaf.model.Card;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

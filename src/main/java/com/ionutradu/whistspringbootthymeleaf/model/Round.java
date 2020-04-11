@@ -1,4 +1,4 @@
-package com.ionutradu.whistspringbootthymeleaf.documents;
+package com.ionutradu.whistspringbootthymeleaf.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,20 +25,20 @@ public class Round {
     private String id;
 
     private int nrMaini;
-    private List<String> handsListId = new ArrayList<>();
+    private List<Hand> handsList = new ArrayList<>();
     private Map<Player, Integer> mapVotate = new HashMap<>();
     private int votatePanaAcum;
-    private String atuu;
-    private List<String> colectieIdCarti;
+    private Card atu;
+    private List<Card> listaCarti;
     private Map<Player, Integer> mainiCastigate = new HashMap<>();
 
     public Round() {
     }
 
-    public Round(int nrMaini, List<String> colectieCarti) {
+    public Round(int nrMaini, List<Card> colectieCarti) {
         this.nrMaini = nrMaini;
-        this.colectieIdCarti = new ArrayList<>(colectieCarti);
-        this.atuu = setAtuu();
+        this.listaCarti = new ArrayList<>(colectieCarti);
+        this.atu = setAtuu();
     }
 
     public String getId() {
@@ -57,12 +57,12 @@ public class Round {
         this.nrMaini = nrMaini;
     }
 
-    public List<String> getHandsListId() {
-        return handsListId;
+    public List<Hand> getHandsList() {
+        return handsList;
     }
 
-    public void setHandsListId(List<String> handsListId) {
-        this.handsListId = handsListId;
+    public void setHandsList(List<Hand> handsList) {
+        this.handsList = handsList;
     }
 
     public Map<Player, Integer> getMapVotate() {
@@ -81,27 +81,27 @@ public class Round {
         this.votatePanaAcum = votatePanaAcum;
     }
 
-    public String getAtuu() {
-        return atuu;
+    public Card getAtu() {
+        return atu;
     }
 
-    private String setAtuu(){
+    private Card setAtuu(){
         if (nrMaini!=8) {
-            Collections.shuffle(colectieIdCarti);
-            String atu = colectieIdCarti.get(0);
-            colectieIdCarti.remove(0);
+            Collections.shuffle(listaCarti);
+            Card atu = listaCarti.get(0);
+            listaCarti.remove(0);
             return atu;
         } else {
             return null;
         }
     }
 
-    public List<String> getColectieCarti() {
-        return colectieIdCarti;
+    public List<Card> getColectieCarti() {
+        return listaCarti;
     }
 
-    public void setColectieCarti(List<String> colectieCarti) {
-        this.colectieIdCarti = colectieCarti;
+    public void setColectieCarti(List<Card> colectieCarti) {
+        this.listaCarti = colectieCarti;
     }
 
     public Map<Player, Integer> getMainiCastigate() {
