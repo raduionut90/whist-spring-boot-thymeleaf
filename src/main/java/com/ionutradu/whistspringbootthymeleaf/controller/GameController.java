@@ -3,6 +3,7 @@ package com.ionutradu.whistspringbootthymeleaf.controller;
 
 import com.ionutradu.whistspringbootthymeleaf.model.Game;
 import com.ionutradu.whistspringbootthymeleaf.model.Player;
+import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
 import com.ionutradu.whistspringbootthymeleaf.service.GameService;
@@ -72,12 +73,16 @@ public class GameController {
     }
 
     @PostMapping("/{gameId}/start")
-    public String start(@PathVariable String gameId, Authentication authentication){
+    public String start(@PathVariable String gameId, Authentication authentication, Model model){
         Game game = gameRepository.findById(gameId).orElse(null);
         gameService.genereazaCarti(game);
         gameService.genereazaRunde(game);
         gameService.genereazaMaini(game);
         gameRepository.save(game);
+        List<Round> rounds = roundService.getRounds(game);
+
+        model.addAttribute(rounds);
+
         return "game/play";
 
     }

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 public class RoundService {
@@ -59,7 +60,15 @@ public class RoundService {
 //
 //            round.getColectieCarti().remove(i);
 //        }
+    }
 
-
+    public List<Round> getRounds(Game game){
+        List<Round> roundList = null;
+        for (String roundId :
+                game.getRoundsList()) {
+            Round round = roundRepository.findById(roundId);
+            roundList.add(round);
+        }
+        return roundList;
     }
 }
