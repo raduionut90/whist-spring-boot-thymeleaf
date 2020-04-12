@@ -32,16 +32,28 @@ public class GameService {
         game.getPlayersList().add(player.get_id());
         gameRepository.save(game);
 
+        checkFirstAndLastPlayer(game, player);
+        checkIfAllPlayersJoined(game);
+    }
+
+    public void checkFirstAndLastPlayer(Game game, Player player){
         if (game.getPlayersList().size() == 1){
             player.setFirst(true);
+            playerRepository.save(player);
         }
-        if (game.getPlayersList().size() == game.getPlayersNumber()){
+        if (game.getPlayersList().size() == game.getPlayersNumber()) {
             player.setLast(true);
+            playerRepository.save(player);
+        }
+    }
+
+    public void checkIfAllPlayersJoined(Game game){
+        if (game.getPlayersList().size() == game.getPlayersNumber()){
             genereazaCarti(game);
             genereazaRunde(game);
             genereazaMaini(game);
+            gameRepository.save(game);
         }
-        playerRepository.save(player);
     }
 
 //    public void genereazaJucatori(Game game){
