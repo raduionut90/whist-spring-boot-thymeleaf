@@ -12,6 +12,8 @@
 <p th:text="'Number of Hands: ' + ${round.getNrMaini()}" />
 <p th:text="'ATU is: ' + ${atu.toString()}" />
 <p th:text="'Votate pana acum: ' + ${round.getVotatePanaAcum()}" />
+<p th:text="'Cartile tale sunt: ' + ${curentCardList.iterator().next().toString()}" />
+
 <!--<span th:text="'Hand nr. : ' + ${round.getNrMaini()}" />-->
 <!--<br>-->
 <!--<span th:if="${round.getAtu() != null}" th:text="'Atu : ' + ${cardService.showCard(round.getAtu())}" />-->

@@ -78,10 +78,14 @@ public class GameController {
         roundService.distribuieCarti(currentRound);
         Card atu = cardService.getAtu(currentRound);
 
+        Player curentPlayer = playerService.getCurentPlayer(authentication);
+        List<Card> curentCards = cardService.getCurentCards(curentPlayer);
+
         model.addAttribute("atu", atu);
         model.addAttribute(currentRound);
         model.addAttribute("roundNumber", roundNr);
-
+        model.addAttribute("player", curentPlayer);
+        model.addAttribute("curentCardList", curentCards);
         return "game/play";
     }
 
