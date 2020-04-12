@@ -15,6 +15,7 @@
 <p th:text="'Cartile tale sunt: '"/>
 <p th:each="card : ${curentCardList}" th:text="${card.toString()}" />
 
+
 <form th:action="@{/game/votate}" th:method="POST">
     <input th:type="hidden" th:name="roundNr" th:value="${roundNr}"/>
     <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
@@ -24,7 +25,9 @@
         <option value="3">3</option>
         <option value="4">4</option>
     </select>
-    <input th:type="submit" th:value="submit">
+    <input th:if="${potSaVotez == true}" th:type="submit" th:value="submit">
+    <p th:if="${potSaVotez == false}" th:text="'Nu este randul tau! asteapta sa voteze cei dinaintea ta'" />
+
 </form>
 
 

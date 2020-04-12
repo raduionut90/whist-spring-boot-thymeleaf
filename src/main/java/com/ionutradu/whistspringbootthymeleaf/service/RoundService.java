@@ -86,4 +86,35 @@ public class RoundService {
         Round round = roundRepository.findById(roundId);
         return round;
     }
+
+    public boolean eRandulMeu(Game game, Round round, Player player){
+        boolean result = false;
+        //verific daca nu cumva am votat deja
+        if (round.getMapVotate().containsKey(player.get_id())){
+            result = false;
+        }
+        int playerNrInList = 0;
+        //daca jucatorul este primul poate vota
+        if (player.isFirst() == true){
+            result = true;
+            return true;
+        } else{
+            //verific ce nr are jucatorul in lista game
+        int gameSize = game.getPlayersList().size();
+            for (int i = 0; i < gameSize; i++) {
+                if (player.get_id().equals(game.getPlayersList().get(i))){
+                    playerNrInList = i;
+                }
+            }
+        }
+
+        //aflu id jucator anterior
+        String idPlayerAnterior = game.getPlayersList().get(playerNrInList-1);
+
+        //verific daca jucatorul aterior a votat
+        if (round.getMapVotate().containsKey(idPlayerAnterior)){
+            result = true;
+        }
+        return result;
+    }
 }

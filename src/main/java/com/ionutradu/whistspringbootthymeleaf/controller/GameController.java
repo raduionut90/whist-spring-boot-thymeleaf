@@ -79,11 +79,14 @@ public class GameController {
         Player curentPlayer = playerService.getCurentPlayer(authentication);
         List<Card> curentCards = cardService.getCurentCards(curentPlayer);
 
+        boolean eRandulMeu = roundService.eRandulMeu(game, currentRound, curentPlayer);
+
         model.addAttribute("atu", atu);
         model.addAttribute("currentRound", currentRound);
         model.addAttribute("roundNumber", roundNr);
         model.addAttribute("player", curentPlayer);
         model.addAttribute("curentCardList", curentCards);
+        model.addAttribute("potSaVotez", eRandulMeu);
         return "game/play";
     }
 
