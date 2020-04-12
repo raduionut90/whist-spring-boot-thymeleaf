@@ -1,6 +1,7 @@
 package com.ionutradu.whistspringbootthymeleaf.service;
 
 import com.ionutradu.whistspringbootthymeleaf.model.Card;
+import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.CardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,5 +15,10 @@ public class CardService {
     public String showCard(String idCard){
         Card card = cardRepository.findById(idCard);
         return card.toString();
+    }
+
+    public Card getAtu(Round round){
+        String atuId = round.getAtu();
+        return cardRepository.findById(atuId);
     }
 }

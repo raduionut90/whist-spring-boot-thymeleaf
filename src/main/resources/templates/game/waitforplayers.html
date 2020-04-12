@@ -15,7 +15,7 @@
 
 
 <br><br>
-<form th:action="@{start}" th:method="POST">
+<form th:action="0" th:method="GET">
     <input th:if="${game.getPlayersList().size() == game.getPlayersNumber()}" type="submit" value="Start" class="btn btn-primary btn-sm mb-3"/>
 </form>
 

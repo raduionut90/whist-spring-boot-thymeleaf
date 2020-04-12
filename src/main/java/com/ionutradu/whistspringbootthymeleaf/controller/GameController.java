@@ -1,11 +1,13 @@
 package com.ionutradu.whistspringbootthymeleaf.controller;
 
 
+import com.ionutradu.whistspringbootthymeleaf.model.Card;
 import com.ionutradu.whistspringbootthymeleaf.model.Game;
 import com.ionutradu.whistspringbootthymeleaf.model.Player;
 import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
+import com.ionutradu.whistspringbootthymeleaf.service.CardService;
 import com.ionutradu.whistspringbootthymeleaf.service.GameService;
 import com.ionutradu.whistspringbootthymeleaf.service.PlayerService;
 import com.ionutradu.whistspringbootthymeleaf.service.RoundService;
@@ -37,6 +39,9 @@ public class GameController {
     @Autowired
     PlayerService playerService;
 
+    @Autowired
+    CardService cardService;
+
     @PostMapping("/newgame/{playersNr}")
     public RedirectView newGame(@PathVariable int playersNr, Authentication authentication){
         Game game = new Game(playersNr);
@@ -64,19 +69,20 @@ public class GameController {
         return "game/waitforplayers";
     }
 
-    @PostMapping("/{gameId}/start")
-    public String start(@PathVariable String gameId, Authentication authentication, Model model){
+    @GetMapping("/{gameId}/{roundNr}")
+    public String start(@PathVariable String gameId, @PathVariable int roundNr, Authentication authentication, Model model){
         Game game = gameRepository.findById(gameId).orElse(null);
-        gameService.genereazaCarti(game);
-        gameService.genereazaRunde(game);
-        gameService.genereazaMaini(game);
-        gameRepository.save(game);
-        List<Round> rounds = roundService.getRounds(game);
 
-        model.addAttribute(rounds);
+        List<Round> roundsList = roundService.getRounds(game);
+        Round currentRound = roundsList.get(roundNr);
+        roundService.distribuieCarti(currentRound);
+        Card atu = cardService.getAtu(currentRound);
+
+        model.addAttribute("atu", atu);
+        model.addAttribute(currentRound);
+        model.addAttribute("roundNumber", roundNr);
 
         return "game/play";
-
     }
 
 

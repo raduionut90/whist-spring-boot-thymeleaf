@@ -134,5 +134,11 @@ public class GameService {
         }
     }
 
+    public Game gameByRoundId(Round round){
+        String roundId = round.getId();
+        Game game = gameRepository.findGameByRoundsListContains(roundId);
+        return game;
+    }
+
 
 }

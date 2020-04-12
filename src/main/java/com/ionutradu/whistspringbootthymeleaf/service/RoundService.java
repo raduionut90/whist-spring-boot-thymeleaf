@@ -11,6 +11,7 @@ import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class RoundService {
     PlayerService playerService;
 
     @Autowired
-    GameRepository gameRepository;
+    GameService gameService;
 
     public void removeCard(Round round, int nrCard){
         round.getColectieCarti().remove(nrCard);
@@ -36,7 +37,13 @@ public class RoundService {
     }
 
     public void distribuieCarti(Round round) {
-        Game game = gameRepository.findGameByRoundsIs(round);
+
+        //verific daca colectia de carti a rundei este intacta (daca nu inseamna ca au fost deja distribuite carti)
+        if (round.getColectieCarti().size() != 23 && round.getAtu() != null ||
+                round.getColectieCarti().size() != 24 && round.getAtu() == null ){
+            return;
+        }
+        Game game = gameService.gameByRoundId(round);
         playerService.clearCartiCurente(game);
         if (round.getNrMaini() == 8){
             Collections.shuffle(round.getColectieCarti());
@@ -63,7 +70,7 @@ public class RoundService {
     }
 
     public List<Round> getRounds(Game game){
-        List<Round> roundList = null;
+        List<Round> roundList = new ArrayList<>();
         for (String roundId :
                 game.getRoundsList()) {
             Round round = roundRepository.findById(roundId);
