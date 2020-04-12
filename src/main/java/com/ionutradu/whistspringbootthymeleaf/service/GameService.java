@@ -141,4 +141,7 @@ public class GameService {
     }
 
 
+    public Game findById(String gameId) {
+        return gameRepository.findById(gameId).orElse(null);
+    }
 }

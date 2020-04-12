@@ -8,27 +8,26 @@
 <body>
 <p th:text="'Round number : ' + ${roundNumber}" />
 <p th:text="'Hand number : ' + ${roundNumber}" />
-<p th:text="'Round id: ' + ${round.getId()}" />
-<p th:text="'Number of Hands: ' + ${round.getNrMaini()}" />
+<p th:text="'Round id: ' + ${currentRound.getId()}" />
+<p th:text="'Number of Hands: ' + ${currentRound.getNrMaini()}" />
 <p th:text="'ATU is: ' + ${atu.toString()}" />
-<p th:text="'Votate pana acum: ' + ${round.getVotatePanaAcum()}" />
-<p th:text="'Cartile tale sunt: ' + ${curentCardList.iterator().next().toString()}" />
+<p th:text="'Votate pana acum: ' + ${currentRound.getVotatePanaAcum()}" />
+<p th:text="'Cartile tale sunt: '"/>
+<p th:each="card : ${curentCardList}" th:text="${card.toString()}" />
 
-<!--<span th:text="'Hand nr. : ' + ${round.getNrMaini()}" />-->
-<!--<br>-->
-<!--<span th:if="${round.getAtu() != null}" th:text="'Atu : ' + ${cardService.showCard(round.getAtu())}" />-->
+<form th:action="@{/game/votate}" th:method="POST">
+    <input th:type="hidden" th:name="roundNr" th:value="${roundNr}"/>
+    <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
+    <select th:name="nrVotate">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+    </select>
+    <input th:type="submit" th:value="submit">
+</form>
 
-<!--<table border="1">-->
-<!--    <tr>-->
-<!--        <td>Player Name</td>-->
-<!--        <td>Card </td>-->
-<!--    </tr>-->
-<!--    <tr th:each="players : ${players}">-->
-<!--        <td th:text="${players}" />-->
-<!--        <td th:each="card : ${players.getCartiCurente()}" th:text="${cardService.showCard(card)}"/>-->
 
-<!--    </tr>-->
-<!--</table>-->
 <br><br>
 <h4>Next Round</h4>
 <!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/' + ${roundNr+1}}" class="btn btn-primary btn-sm mb-3">Play</a>-->

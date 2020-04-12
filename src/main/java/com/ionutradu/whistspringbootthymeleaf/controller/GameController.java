@@ -71,10 +71,8 @@ public class GameController {
 
     @GetMapping("/{gameId}/{roundNr}")
     public String start(@PathVariable String gameId, @PathVariable int roundNr, Authentication authentication, Model model){
-        Game game = gameRepository.findById(gameId).orElse(null);
-
-        List<Round> roundsList = roundService.getRounds(game);
-        Round currentRound = roundsList.get(roundNr);
+        Game game = gameService.findById(gameId);
+        Round currentRound = roundService.getRoundByRoundNr(game, roundNr);
         roundService.distribuieCarti(currentRound);
         Card atu = cardService.getAtu(currentRound);
 
@@ -82,7 +80,7 @@ public class GameController {
         List<Card> curentCards = cardService.getCurentCards(curentPlayer);
 
         model.addAttribute("atu", atu);
-        model.addAttribute(currentRound);
+        model.addAttribute("currentRound", currentRound);
         model.addAttribute("roundNumber", roundNr);
         model.addAttribute("player", curentPlayer);
         model.addAttribute("curentCardList", curentCards);

@@ -26,11 +26,11 @@ public class Round {
 
     private int nrMaini;
     private List<String> handsList = new ArrayList<>();
-    private Map<Player, Integer> mapVotate = new HashMap<>();
+    private Map<String, Integer> mapVotate = new HashMap<>();
     private int votatePanaAcum;
     private String atu;
     private List<String> listaCarti;
-    private Map<Player, Integer> mainiCastigate = new HashMap<>();
+    private Map<String, Integer> mainiCastigate = new HashMap<>();
 
     public Round() {
     }
@@ -65,11 +65,11 @@ public class Round {
         this.handsList = handsList;
     }
 
-    public Map<Player, Integer> getMapVotate() {
+    public Map<String, Integer> getMapVotate() {
         return mapVotate;
     }
 
-    public void setMapVotate(Map<Player, Integer> mapVotate) {
+    public void setMapVotate(Map<String, Integer> mapVotate) {
         this.mapVotate = mapVotate;
     }
 
@@ -104,11 +104,11 @@ public class Round {
         this.listaCarti = colectieCarti;
     }
 
-    public Map<Player, Integer> getMainiCastigate() {
+    public Map<String, Integer> getMainiCastigate() {
         return mainiCastigate;
     }
 
-    public void setMainiCastigate(Map<Player, Integer> mainiCastigate) {
+    public void setMainiCastigate(Map<String, Integer> mainiCastigate) {
         this.mainiCastigate = mainiCastigate;
     }
 }

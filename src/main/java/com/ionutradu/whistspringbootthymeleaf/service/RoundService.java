@@ -59,14 +59,12 @@ public class RoundService {
         }
     }
 
-    public void jucatorCateVotezi(Round round) {
-//        for (int i = 0; i < round.getNrMaini(); i++) {
-//            String nextCardId = round.getColectieCarti().get(i);
-//
-//            playerService.jucatorPreiaCartea(nextCardId);
-//
-//            round.getColectieCarti().remove(i);
-//        }
+    public void jucatorCateVotezi(Round round, Player player, int votateDeJucator) {
+            round.getMapVotate().put(player.get_id(), votateDeJucator);
+
+            int votate = round.getVotatePanaAcum() + round.getMapVotate().get(player.get_id());
+            round.setVotatePanaAcum(votate);
+            roundRepository.save(round);
     }
 
     public List<Round> getRounds(Game game){
@@ -77,5 +75,15 @@ public class RoundService {
             roundList.add(round);
         }
         return roundList;
+    }
+
+    public Round getRound(String roundId) {
+        return roundRepository.findById(roundId);
+    }
+
+    public Round getRoundByRoundNr(Game game, int roundNr) {
+        String roundId = game.getRoundsList().get(roundNr);
+        Round round = roundRepository.findById(roundId);
+        return round;
     }
 }
