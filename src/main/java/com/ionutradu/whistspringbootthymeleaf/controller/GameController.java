@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -43,13 +42,6 @@ public class GameController {
         Game game = new Game(playersNr);
         gameRepository.save(game);
         gameService.joinPlayer(game.get_id(), authentication);
-
-//        gameService.genereazaJucatori(game);
-//        gameService.genereazaCarti(game);
-//        gameService.genereazaRunde(game);
-//        gameService.genereazaMaini(game);
-//        gameRepository.save(game);
-
         return new RedirectView("/game/" + game.get_id() + "/wait");
     }
 
