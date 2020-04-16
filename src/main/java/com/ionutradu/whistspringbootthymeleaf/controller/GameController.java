@@ -72,7 +72,7 @@ public class GameController {
 
         int curentHandNr = curentRound.getCurentHand();
         Hand curentHand = handService.getCurentHand(curentRound, curentHandNr);
-        List<Card> sendedCards = handService.getSendedCards(curentHand, curentPlayer);
+        Card sendedCard = handService.getSendedCard(curentHand, curentPlayer);
 
                 model.addAttribute("atu", atu);
         model.addAttribute("curentRound", curentRound);
@@ -81,7 +81,7 @@ public class GameController {
         model.addAttribute("curentCardList", curentCards);
         model.addAttribute("potSaVotez", eRandulMeu);
         model.addAttribute("curentHand", curentHand);
-        model.addAttribute("sendedCards", sendedCards);
+        model.addAttribute("sendedCards", sendedCard);
         return "game/play";
     }
 

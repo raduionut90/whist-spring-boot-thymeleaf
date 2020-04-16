@@ -16,7 +16,7 @@ public class Hand {
     private String atu;
     private String culoare;
 
-    // map tip <CardID, PlayerID
+    // map tip <PlayerID, CardID>
     private Map<String, String> cartiJucatori = new LinkedHashMap<>();
 
     public Hand(String atu) {

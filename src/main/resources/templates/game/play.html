@@ -61,7 +61,7 @@
 </div>
 
 <div th:if="${curentRound.getMapVotate().get(player.get_id()) != null}" class="container col-6 alert alert-danger">
-    <div th:if="${sendedCards == null || player.getCartiCurente().size() + curentRound.getCurentHand() == curentRound.getNrMaini()}">
+    <div th:if="${sendedCards == null}">
         <span>Ce carte dai ?</span>
         <form th:each="card : ${curentCardList}" th:action="@{/round/sendCard}" th:method="POST">
             <input th:type="hidden" th:name="roundNr" th:value="${roundNr}"/>
@@ -70,8 +70,8 @@
             <input th:type="submit" th:value="${card.toString()}" class="btn btn-primary">
         </form>
     </div>
-    <div th:if="${sendedCards != null || player.getCartiCurente().size() + curentRound.getCurentHand() == curentRound.getNrMaini() - 1}">
-        <p th:each="card : ${sendedCards}" th:text="'Ai dat ' + ${card.toString()}" />
+    <div th:if="${sendedCards != null}">
+        <span th:text="'Ai dat ' + ${sendedCards.toString()}" />
     </div>
 </div>
 
@@ -87,7 +87,6 @@
     <button type="button" class="btn btn-primary">Next</button>
 </div>
 
-<!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/' + ${roundNr+1}}" class="btn btn-primary btn-sm mb-3">Play</a>-->
 <div th:insert="/fragments/template :: footer" />
 </body>
 </html>
