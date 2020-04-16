@@ -10,22 +10,22 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     @Autowired
-    PlayerService playerService;
-
-    @Autowired
-    CardRepository cardRepository;
-
-    @Autowired
     GameRepository gameRepository;
 
     @Autowired
-    RoundRepository roundRepository;
+    PlayerService playerService;
 
     @Autowired
-    HandRepository handRepository;
+    CardService cardService;
+
+    @Autowired
+    RoundService roundService;
+
+    @Autowired
+    HandService handService;
 
     public void joinPlayer(String gameId, Authentication authentication){
-        Game game = gameRepository.findById(gameId).orElse(null);
+        Game game = findById(gameId);
         Player player = new Player(authentication.getName());
 
         if (playerService.getCurentPlayer(authentication) != null){
@@ -60,29 +60,13 @@ public class GameService {
         }
     }
 
-//    public void genereazaJucatori(Game game){
-//        for(int i = 0; i<game.getPlayersNumber(); i++){
-//            Player player = new Player( "Player " + (i+1));
-//            playerRepository.save(player);
-//            game.getPlayersList().add(player.get_id());
-//        }
-//        Player firstPlayer = game.getPlayersList().get(0);
-//        firstPlayer.setFirst(true);
-//        playerRepository.save(firstPlayer);
-//
-//        int lastPlayerId = game.getPlayersList().size() - 1;
-//        Player lastPlayer = game.getPlayersList().get(lastPlayerId);
-//        lastPlayer.setLast(true);
-//        playerRepository.save(lastPlayer);
-//    }
-
     public void genereazaCarti(Game game){
         if(game.getPlayersNumber()==3){
             //daca sunt 3 jucatori, genereaza cartile de la 9 la AS
             for(int i=6; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
-                    cardRepository.save(card);
+                    cardService.save(card);
                     game.getCardsList().add(card.getId());
                 }
             }
@@ -91,7 +75,7 @@ public class GameService {
             for(int i=4; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
-                    cardRepository.save(card);
+                    cardService.save(card);
                     game.getCardsList().add(card.getId());
                 }
             }
@@ -100,7 +84,7 @@ public class GameService {
             for(int i=2; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
-                    cardRepository.save(card);
+                    cardService.save(card);
                     game.getCardsList().add(card.getId());
                 }
             }
@@ -109,7 +93,7 @@ public class GameService {
             for(int i=0; i<12; i++){
                 for(int j=0; j<4; j++){
                     Card card = new Card(i, j);
-                    cardRepository.save(card);
+                    cardService.save(card);
                     game.getCardsList().add(card.getId());
                 }
             }
@@ -120,20 +104,20 @@ public class GameService {
         int nrRunde = game.getRounds().length;
         for (int i = 0; i < nrRunde; i++) {
             Round round = new Round(game.getRounds()[i], game.getCardsList());
-            roundRepository.save(round);
+            roundService.save(round);
             game.getRoundsList().add(round.getId());
         }
     }
 
     public void genereazaMaini(Game game) {
         for (String roundId : game.getRoundsList()) {
-            Round round = roundRepository.findById(roundId);
+            Round round = roundService.findById(roundId);
 
             for (int i = 0; i < round.getNrMaini(); i++) {
                 Hand hand = new Hand(round.getAtu());
-                handRepository.save(hand);
-                round.getHandsList().add(hand.getAtu());
-                roundRepository.save(round);
+                handService.save(hand);
+                round.getHandsList().add(hand.getId());
+                roundService.save(round);
             }
         }
     }
@@ -149,4 +133,7 @@ public class GameService {
         return gameRepository.findById(gameId).orElse(null);
     }
 
+    public void save(Game game) {
+        gameRepository.save(game);
+    }
 }

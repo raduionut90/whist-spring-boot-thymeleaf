@@ -14,11 +14,10 @@ public class Hand {
     private String id;
 
     private String atu;
-    private String culoare;   //culoarea
-    private Map<Player, Card> cartiJucatori = new LinkedHashMap<>();
+    private String culoare;
 
-    public Hand() {
-    }
+    // map tip <CardID, PlayerID
+    private Map<String, String> cartiJucatori = new LinkedHashMap<>();
 
     public Hand(String atu) {
         this.atu = atu;
@@ -48,11 +47,11 @@ public class Hand {
         this.culoare = culoare;
     }
 
-    public Map<Player, Card> getCartiJucatori() {
+    public Map<String, String> getCartiJucatori() {
         return cartiJucatori;
     }
 
-    public void setCartiJucatori(Map<Player, Card> cartiJucatori) {
+    public void setCartiJucatori(Map<String, String> cartiJucatori) {
         this.cartiJucatori = cartiJucatori;
     }
 }

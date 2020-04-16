@@ -56,4 +56,9 @@ public class PlayerService {
             String playerName = authentication.getName();
             return playerRepository.findByNume(playerName);
     }
+
+    public void removeSendedCard(Player player, String cardId) {
+        player.getCartiCurente().remove(cardId);
+        playerRepository.save(player);
+    }
 }

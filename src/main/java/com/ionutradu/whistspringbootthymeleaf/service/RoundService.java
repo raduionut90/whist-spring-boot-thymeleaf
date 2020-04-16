@@ -1,10 +1,7 @@
 package com.ionutradu.whistspringbootthymeleaf.service;
 
 
-import com.ionutradu.whistspringbootthymeleaf.model.Card;
-import com.ionutradu.whistspringbootthymeleaf.model.Game;
-import com.ionutradu.whistspringbootthymeleaf.model.Player;
-import com.ionutradu.whistspringbootthymeleaf.model.Round;
+import com.ionutradu.whistspringbootthymeleaf.model.*;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.PlayerRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
@@ -31,12 +28,6 @@ public class RoundService {
     @Autowired
     GameService gameService;
 
-    public void removeCard(Round round, int nrCard){
-        round.getColectieCarti().remove(nrCard);
-        roundRepository.save(round);
-
-    }
-
     public void distribuieCarti(Round round) {
 
         //verific daca colectia de carti a rundei este intacta (daca nu inseamna ca au fost deja distribuite carti)
@@ -61,29 +52,15 @@ public class RoundService {
     }
 
     public void jucatorCateVotezi(Round round, Player player, int votateDeJucator) {
-            Map<String, Integer> mapVotate = round.getMapVotate();
-            if (mapVotate.get(player.get_id()) == null) {
-                mapVotate.put(player.get_id(), votateDeJucator);
-            }
-            round.setMapVotate(mapVotate);
-
-            int votate = round.getVotatePanaAcum() + round.getMapVotate().get(player.get_id());
-            round.setVotatePanaAcum(votate);
-            roundRepository.save(round);
-    }
-
-    public List<Round> getRounds(Game game){
-        List<Round> roundList = new ArrayList<>();
-        for (String roundId :
-                game.getRoundsList()) {
-            Round round = roundRepository.findById(roundId);
-            roundList.add(round);
+        Map<String, Integer> mapVotate = round.getMapVotate();
+        if (mapVotate.get(player.get_id()) == null) {
+            mapVotate.put(player.get_id(), votateDeJucator);
         }
-        return roundList;
-    }
+        round.setMapVotate(mapVotate);
 
-    public Round getRound(String roundId) {
-        return roundRepository.findById(roundId);
+        int votate = round.getVotatePanaAcum() + round.getMapVotate().get(player.get_id());
+        round.setVotatePanaAcum(votate);
+        roundRepository.save(round);
     }
 
     public Round getRoundByRoundNr(Game game, int roundNr) {
@@ -92,6 +69,7 @@ public class RoundService {
         return round;
     }
 
+    //pentru a vota
     public boolean eRandulMeu(Game game, Round round, Player player){
         boolean result = false;
         //verific daca nu cumva am votat deja
@@ -101,7 +79,6 @@ public class RoundService {
         int playerNrInList = 0;
         //daca jucatorul este primul poate vota
         if (player.isFirst() == true){
-            result = true;
             return true;
         } else{
             //verific ce nr are jucatorul in lista game
@@ -121,5 +98,13 @@ public class RoundService {
             result = true;
         }
         return result;
+    }
+
+    public void save(Round round) {
+        roundRepository.save(round);
+    }
+
+    public Round findById(String roundId) {
+        return roundRepository.findById(roundId);
     }
 }

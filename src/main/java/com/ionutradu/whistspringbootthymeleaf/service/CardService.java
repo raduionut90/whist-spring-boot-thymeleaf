@@ -16,11 +16,6 @@ public class CardService {
     @Autowired
     CardRepository cardRepository;
 
-    public String showCard(String idCard){
-        Card card = cardRepository.findById(idCard);
-        return card.toString();
-    }
-
     public Card getAtu(Round round){
         String atuId = round.getAtu();
         return cardRepository.findById(atuId);
@@ -34,5 +29,13 @@ public class CardService {
             cardList.add(curentCard);
         }
         return cardList;
+    }
+
+    public void save(Card card) {
+        cardRepository.save(card);
+    }
+
+    public Card findById(String id) {
+        return cardRepository.findById(id);
     }
 }

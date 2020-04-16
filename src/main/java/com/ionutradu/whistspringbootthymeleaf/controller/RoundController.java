@@ -1,14 +1,12 @@
 package com.ionutradu.whistspringbootthymeleaf.controller;
 
 import com.ionutradu.whistspringbootthymeleaf.model.Game;
+import com.ionutradu.whistspringbootthymeleaf.model.Hand;
 import com.ionutradu.whistspringbootthymeleaf.model.Player;
 import com.ionutradu.whistspringbootthymeleaf.model.Round;
 import com.ionutradu.whistspringbootthymeleaf.repository.GameRepository;
 import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
-import com.ionutradu.whistspringbootthymeleaf.service.CardService;
-import com.ionutradu.whistspringbootthymeleaf.service.GameService;
-import com.ionutradu.whistspringbootthymeleaf.service.PlayerService;
-import com.ionutradu.whistspringbootthymeleaf.service.RoundService;
+import com.ionutradu.whistspringbootthymeleaf.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/game")
+@RequestMapping("/round")
 public class RoundController {
 
     @Autowired
@@ -33,23 +31,8 @@ public class RoundController {
     @Autowired
     CardService cardService;
 
-//    @GetMapping("/play/{gameId}/{roundNr}")
-//    public String play(@PathVariable String gameId, @PathVariable int roundNr, Model model) {
-//        Game game = gameService.findById(gameId);
-//        Round round = roundService.getRoundByRoundNr(game, roundNr);
-//        roundService.distribuieCarti(round);
-////            distribuire.calcTotalVotate();
-////            distribuire.genereazaMaini();
-////            gameService.jucatorDaCarte(game);
-//
-//        List<Player> playerList = playerService.getAllPlayerFromGame(game);
-//        model.addAttribute("players", playerList);
-//        model.addAttribute("round", round);
-//        model.addAttribute("game", game);
-//        model.addAttribute("roundNr", roundNr);
-//        model.addAttribute("cardService", cardService);
-//        return "game/play";
-//    }
+    @Autowired
+    private HandService handService;
 
     @PostMapping("votate")
     public String votate(@RequestParam int roundNr, @RequestParam int nrVotate, @RequestParam String gameId, Authentication authentication) {
@@ -60,4 +43,13 @@ public class RoundController {
             return "redirect:/game/" + game.get_id() + "/" + roundNr;
     }
 
+    @PostMapping("sendCard")
+    public String sendCard(@RequestParam int roundNr, @RequestParam String gameId, @RequestParam String cardId, Authentication authentication) {
+        Game game = gameService.findById(gameId);
+        Player player = playerService.getCurentPlayer(authentication);
+        Round round = roundService.getRoundByRoundNr(game, roundNr);
+        Hand curentHand = handService.getCurentHand(round, round.getCurentHand());
+        handService.sendCard(player, cardId, curentHand);
+        return "redirect:/game/" + game.get_id() + "/" + roundNr;
+    }
 }
