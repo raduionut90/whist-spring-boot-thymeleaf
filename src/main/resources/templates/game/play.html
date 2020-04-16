@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8" />
     <title>Whist - New Game Form</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
 </head>
 <body>
-<p th:text="'Round number : ' + ${roundNumber}" />
-<p th:text="'Hand number : ' + ${roundNumber}" />
-<p th:text="'Round id: ' + ${currentRound.getId()}" />
-<p th:text="'Number of Hands: ' + ${currentRound.getNrMaini()}" />
-<p th:text="'ATU is: ' + ${atu.toString()}" />
-<p th:text="'Votate pana acum: ' + ${currentRound.getVotatePanaAcum()}" />
-<p th:text="'Cartile tale sunt: '"/>
-<p th:each="card : ${curentCardList}" th:text="${card.toString()}" />
-
-
-<form th:action="@{/game/votate}" th:method="POST">
+<div th:insert="/fragments/template :: navbar" />
+<div class="container col-6">
+    <div class="card-header">
+        <p th:text="'Curent round : ' + ${roundNumber} + ', Number of Hands : ' + ${currentRound.getNrMaini()} + ', Curent hand : ' + ${currentRound.getCurentHand()}" />
+    </div>
+    <div class="card-body">
+            <p th:text="'Votate pana acum: ' + ${currentRound.getVotatePanaAcum()}" />
+            <p th:text="'ATU is: ' + ${atu.toString()}" />
+            <p th:text="'Cartile tale sunt: '"/>
+            <span th:each="card : ${curentCardList}" th:text="${card.toString()}" />
+    </div>
+</div>
+<br>
+<div class="container col-6">
+    <span>How much you vote?</span>
+    <form th:if="${currentRound.getMapVotate().get(player.get_id()) == null}" th:action="@{/game/votate}" th:method="POST">
     <input th:type="hidden" th:name="roundNr" th:value="${roundNr}"/>
     <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
     <select th:name="nrVotate">
@@ -25,15 +30,33 @@
         <option value="3">3</option>
         <option value="4">4</option>
     </select>
-    <input th:if="${potSaVotez == true}" th:type="submit" th:value="submit">
-    <p th:if="${potSaVotez == false}" th:text="'Nu este randul tau! asteapta sa voteze cei dinaintea ta'" />
-
+    <input th:if="${potSaVotez == true}" th:type="submit" th:value="submit" class="btn btn-primary">
+<!--    <p th:if="${potSaVotez == false}" th:text="'Nu este randul tau! asteapta sa voteze cei dinaintea ta'" />-->
+        <div th:if="${potSaVotez == false}" class="alert alert-info">
+            <strong>Info!</strong> Nu este randul tau! asteapta sa voteze cei dinaintea ta.
+        </div>
 </form>
+</div>
 
 
-<br><br>
-<h4>Next Round</h4>
+<div data-auto-refresh="true" th:if="${currentRound.getMapVotate().get(player.get_id()) != null}" class="container alert alert-info">
+    <strong>Info!</strong>
+    <p th:text="'Ai votat ' + ${currentRound.getMapVotate().get(player.get_id())}" />
+</div>
+
+<br>
+<div class="container col-6">
+    <div>
+        A castigat cutaricaaa
+    </div>
+    <div>
+        Nu au votat toti jucatorii, trebuie sa mai voteze x, y, z!
+    </div>
+    <br>
+    <button type="button" class="btn btn-primary">Next</button>
+</div>
+
 <!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/' + ${roundNr+1}}" class="btn btn-primary btn-sm mb-3">Play</a>-->
-
+<div th:insert="/fragments/template :: footer" />
 </body>
 </html>

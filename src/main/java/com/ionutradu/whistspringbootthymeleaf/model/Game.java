@@ -21,12 +21,15 @@ public class Game {
 
     private List<String> cardsList = new ArrayList<>();
 
+    private int curentRound;
+
     public Game() {
     }
 
     public Game(int playersNumber) {
         this.playersNumber = playersNumber;
         this.rounds = setDistribuiri(playersNumber);
+        this.curentRound = 0;
     }
 
     //acestea sunt mainile, reprezentand cartile impartite, in functie de nr de jucatori.
@@ -96,6 +99,14 @@ public class Game {
 
     public void setCardsList(List<String> cardsList) {
         this.cardsList = cardsList;
+    }
+
+    public int getCurentRound() {
+        return curentRound;
+    }
+
+    public void setCurentRound(int curentRound) {
+        this.curentRound = curentRound;
     }
 
     @Override

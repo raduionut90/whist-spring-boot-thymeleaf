@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Whist Card Game</title>
+    <link rel="stylesheet" th:href="@{../../static/bootstrap/css/bootstrap.css}" />
+</head>
+<body>
+<div sec:authorize="isAuthenticated()">
+        Welcome, <span sec:authentication="name">Username</span>
+
+</div>
+    <h2>Welcome to Whist</h2>
+    <br><br>
+    <h3>Creaza o masa</h3>
+<form th:action="@{/game/newgame/3}" th:method="POST">
+    <input type="submit" value="3 players" class="btn btn-primary btn-sm mb-3">
+</form>
+<form th:action="@{/game/newgame/4}" th:method="POST">
+    <input type="submit" value="4 players" class="btn btn-primary btn-sm mb-3">
+</form>
+<form th:action="@{/game/newgame/5}" th:method="POST">
+    <input type="submit" value="5 players" class="btn btn-primary btn-sm mb-3">
+</form>
+<form th:action="@{/game/newgame/6}" th:method="POST">
+    <input type="submit" value="6 players" class="btn btn-primary btn-sm mb-3">
+</form>
+    <br>
+<!--    <a th:href="@{/game/newgame/3}" th:method="POST" class="btn btn-primary btn-sm mb-3">3 players</a>-->
+<!--    <a th:href="@{/game/newgame/4}" th:method="POST" class="btn btn-primary btn-sm mb-3">4 players</a>-->
+<!--    <a th:href="@{/game/newgame/5}" th:method="POST" class="btn btn-primary btn-sm mb-3">5 players</a>-->
+<!--    <a th:href="@{/game/newgame/6}" th:method="POST" class="btn btn-primary btn-sm mb-3">6 players</a>-->
+<!--    <br>-->
+
+
+<br>
+<table border="1">
+    <tr>
+        <td>game</td>
+        <td>Card </td>
+    </tr>
+    <tr th:each="game : ${gameList}">
+        <td th:text="${game.get_id()}" />
+        <td>
+            <form th:action="@{ 'game/' + ${game.get_id()} + '/join'}" th:method="POST">
+            <input type="submit" value="intra" class="btn btn-primary btn-sm mb-3"/>
+            </form>
+        </td>
+
+    </tr>
+</table>
+<br>
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="logout">
+</form>
+</body>
+</html>

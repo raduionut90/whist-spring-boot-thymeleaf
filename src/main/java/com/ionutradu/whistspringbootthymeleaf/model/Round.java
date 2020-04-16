@@ -31,6 +31,7 @@ public class Round {
     private String atu;
     private List<String> listaCarti;
     private Map<String, Integer> mainiCastigate = new HashMap<>();
+    private int curentHand;
 
     public Round() {
     }
@@ -39,6 +40,7 @@ public class Round {
         this.nrMaini = nrMaini;
         this.listaCarti = new ArrayList<>(colectieCarti);
         this.atu = setAtuu();
+        this.curentHand = 0;
     }
 
     public String getId() {
@@ -110,5 +112,13 @@ public class Round {
 
     public void setMainiCastigate(Map<String, Integer> mainiCastigate) {
         this.mainiCastigate = mainiCastigate;
+    }
+
+    public int getCurentHand() {
+        return curentHand;
+    }
+
+    public void setCurentHand(int curentHand) {
+        this.curentHand = curentHand;
     }
 }

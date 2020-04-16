@@ -1,23 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="/fragments/template :: head">
     <meta charset="UTF-8" />
     <title>Whist - New Game Form</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.css}" />
+    <link href="../../static/bootstrap/css/bootstrap.css" th:href="@{/static/bootstrap/css/bootstrap.css}" rel="stylesheet" />
 </head>
 <body>
-<h2>sda</h2>
-<h2 th:text="'Game id : ' + ${game.get_id()}" />
-<span th:text="'Players nr. : ' + ${game.getPlayersNumber()}" />
-<br>
-<h2>players:</h2>
-<p th:each="player : ${Players}" th:text="${player.toString()} " />
+<div th:insert="/fragments/template :: navbar"/>
+
+<div class="container-sm">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Player</th>
+            <th scope="col">Ready?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player : ${Players}">
+            <th scope="row">1</th>
+            <td th:text="${player.getNume()}">Mark</td>
+            <td th:text="${player.isReady()}">In waiting</td>
+        </tr>
+        </tbody>
+    </table>
+    <th th:if="${game.getPlayersList().size() == game.getPlayersNumber()}">
+        <a th:href="0">
+            <input type="button" value="Start" class="btn btn-primary btn-sm mb-3"/>
+        </a>
+    </th>
+</div>
+
+<!--<h2>sda</h2>-->
+<!--<h2 th:text="'Game id : ' + ${game.get_id()}" />-->
+<!--<span th:text="'Players nr. : ' + ${game.getPlayersNumber()}" />-->
+<!--<br>-->
+<!--<h2>players:</h2>-->
+<!--<p th:each="player : ${Players}" th:text="${player.toString()} " />-->
 
 
-<br><br>
-<form th:action="0" th:method="GET">
-    <input th:if="${game.getPlayersList().size() == game.getPlayersNumber()}" type="submit" value="Start" class="btn btn-primary btn-sm mb-3"/>
-</form>
+<!--<br><br>-->
+<!--<form th:action="0" th: method="GET">-->
+<!--    <input th:if="${game.getPlayersList().size() == game.getPlayersNumber()}" type="submit" value="Start" class="btn btn-primary btn-sm mb-3"/>-->
+<!--</form>-->
 
 <!--<a th:href="@{'/game/play/' + ${game.get_id()} + '/0'}" class="btn btn-primary btn-sm mb-3">Play</a>-->
 

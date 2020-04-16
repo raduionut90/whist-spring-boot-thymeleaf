@@ -24,6 +24,10 @@ public class PlayerService {
     @Autowired
     RoundService roundService;
 
+    public Player save(Player player){
+        return playerRepository.save(player);
+    }
+
     public void jucatorPreiaCartea(String playerId, String nextCard) {
         Player player = playerRepository.findBy_id(playerId);
         player.getCartiCurente().add(nextCard);

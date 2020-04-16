@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     @Autowired
-    PlayerRepository playerRepository;
+    PlayerService playerService;
 
     @Autowired
     CardRepository cardRepository;
@@ -25,10 +25,14 @@ public class GameService {
     HandRepository handRepository;
 
     public void joinPlayer(String gameId, Authentication authentication){
-        Player player = new Player(authentication.getName());
-        playerRepository.save(player);
-
         Game game = gameRepository.findById(gameId).orElse(null);
+        Player player = new Player(authentication.getName());
+
+        if (playerService.getCurentPlayer(authentication) != null){
+            return;
+        }
+        playerService.save(player);
+
         game.getPlayersList().add(player.get_id());
         gameRepository.save(game);
 
@@ -39,11 +43,11 @@ public class GameService {
     public void checkFirstAndLastPlayer(Game game, Player player){
         if (game.getPlayersList().size() == 1){
             player.setFirst(true);
-            playerRepository.save(player);
+            playerService.save(player);
         }
         if (game.getPlayersList().size() == game.getPlayersNumber()) {
             player.setLast(true);
-            playerRepository.save(player);
+            playerService.save(player);
         }
     }
 
@@ -144,4 +148,5 @@ public class GameService {
     public Game findById(String gameId) {
         return gameRepository.findById(gameId).orElse(null);
     }
+
 }

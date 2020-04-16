@@ -17,9 +17,11 @@ public class Player {
     private boolean first = false;
     private boolean last = false;
     private List<String> cartiCurente = new ArrayList<>();
+    private boolean ready;
 
     public Player(String nume) {
         this.nume = nume;
+        this.ready = false;
     }
 
     @Override
@@ -74,5 +76,13 @@ public class Player {
 
     public void setCartiCurente(List<String> cartiCurente) {
         this.cartiCurente = cartiCurente;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 }

@@ -17,9 +17,18 @@ public class MainController {
     @GetMapping("/")
     public String index(Model model){
         List<Game> gameList = gameRepository.findAll();
-        model.addAttribute(gameList);
+        model.addAttribute("gameList", gameList);
         return "index";
     }
 
 
+    @GetMapping("/login")
+    public String login(){
+        return "auth/login";
+    }
+
+    @GetMapping("/register")
+    public String register(){
+        return "auth/registration-form";
+    }
 }

@@ -1,4 +1,4 @@
-package com.ionutradu.whistspringbootthymeleaf.security.config;
+package com.ionutradu.whistspringbootthymeleaf.config;
 
 import com.ionutradu.whistspringbootthymeleaf.authentication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/css/**",
                         "/img/**",
-                        "/register/**").permitAll()
+                        "/register/**",
+                        "/**",
+                        "/_data/**",
+                        "/_includes/**",
+                        "/docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

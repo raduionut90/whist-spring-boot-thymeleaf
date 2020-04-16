@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoundService {
@@ -60,7 +61,11 @@ public class RoundService {
     }
 
     public void jucatorCateVotezi(Round round, Player player, int votateDeJucator) {
-            round.getMapVotate().put(player.get_id(), votateDeJucator);
+            Map<String, Integer> mapVotate = round.getMapVotate();
+            if (mapVotate.get(player.get_id()) == null) {
+                mapVotate.put(player.get_id(), votateDeJucator);
+            }
+            round.setMapVotate(mapVotate);
 
             int votate = round.getVotatePanaAcum() + round.getMapVotate().get(player.get_id());
             round.setVotatePanaAcum(votate);
@@ -90,8 +95,8 @@ public class RoundService {
     public boolean eRandulMeu(Game game, Round round, Player player){
         boolean result = false;
         //verific daca nu cumva am votat deja
-        if (round.getMapVotate().containsKey(player.get_id())){
-            result = false;
+        if (round.getMapVotate().get(player.get_id()) != null){
+            return false;
         }
         int playerNrInList = 0;
         //daca jucatorul este primul poate vota
