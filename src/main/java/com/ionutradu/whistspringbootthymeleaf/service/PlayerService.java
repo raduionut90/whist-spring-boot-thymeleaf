@@ -61,4 +61,30 @@ public class PlayerService {
         player.getCartiCurente().remove(cardId);
         playerRepository.save(player);
     }
+
+    public void playerSetFlag(List<String> playersList) {
+        //pt toti setez First and Last False
+        for (String playerId : playersList) {
+            Player player = playerRepository.findBy_id(playerId);
+            player.setFirst(false);
+            player.setLast(false);
+            playerRepository.save(player);
+        }
+
+        //setez First
+        String idFirst = playersList.get(0);
+        Player first = playerRepository.findBy_id(idFirst);
+        first.setFirst(true);
+        playerRepository.save(first);
+
+        //setez Last
+        String idLast = playersList.get(playersList.size() - 1);
+        Player last = playerRepository.findBy_id(idLast);
+        last.setLast(true);
+        playerRepository.save(last);
+    }
+
+    public Player findById(String playerId) {
+        return playerRepository.findBy_id(playerId);
+    }
 }

@@ -74,7 +74,10 @@ public class GameController {
         Hand curentHand = handService.getCurentHand(curentRound, curentHandNr);
         Card sendedCard = handService.getSendedCard(curentHand, curentPlayer);
 
-                model.addAttribute("atu", atu);
+        boolean eRandulMeuSaDauCarte = roundService.eRandulMeuSaDauCarte(curentRound, curentHand, curentPlayer);
+
+        model.addAttribute("curentGame", game);
+        model.addAttribute("atu", atu);
         model.addAttribute("curentRound", curentRound);
         model.addAttribute("roundNumber", roundNr);
         model.addAttribute("player", curentPlayer);
@@ -82,6 +85,7 @@ public class GameController {
         model.addAttribute("potSaVotez", eRandulMeu);
         model.addAttribute("curentHand", curentHand);
         model.addAttribute("sendedCards", sendedCard);
+        model.addAttribute("potSaDauCarte", eRandulMeuSaDauCarte);
         return "game/play";
     }
 

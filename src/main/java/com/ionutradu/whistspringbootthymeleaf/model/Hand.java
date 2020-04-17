@@ -14,13 +14,15 @@ public class Hand {
     private String id;
 
     private String atu;
-    private String culoare;
+    private String culoare; //primaCarte
+    private boolean terminat;
 
     // map tip <PlayerID, CardID>
     private Map<String, String> cartiJucatori = new LinkedHashMap<>();
 
     public Hand(String atu) {
         this.atu = atu;
+        this.terminat = false;
     }
 
     public String getId() {
@@ -53,5 +55,13 @@ public class Hand {
 
     public void setCartiJucatori(Map<String, String> cartiJucatori) {
         this.cartiJucatori = cartiJucatori;
+    }
+
+    public boolean isTerminat() {
+        return terminat;
+    }
+
+    public void setTerminat(boolean terminat) {
+        this.terminat = terminat;
     }
 }

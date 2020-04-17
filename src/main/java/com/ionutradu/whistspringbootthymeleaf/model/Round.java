@@ -30,8 +30,10 @@ public class Round {
     private int votatePanaAcum;
     private String atu;
     private List<String> listaCarti;
+    //<idPlayer, nrMainiCastigate>
     private Map<String, Integer> mainiCastigate = new HashMap<>();
     private int curentHand;
+    private boolean terminat;
 
     public Round() {
     }
@@ -41,6 +43,7 @@ public class Round {
         this.listaCarti = new ArrayList<>(colectieCarti);
         this.atu = setAtuu();
         this.curentHand = 0;
+        this.terminat = false;
     }
 
     public String getId() {
@@ -120,5 +123,13 @@ public class Round {
 
     public void setCurentHand(int curentHand) {
         this.curentHand = curentHand;
+    }
+
+    public boolean isTerminat() {
+        return terminat;
+    }
+
+    public void setTerminat(boolean terminat) {
+        this.terminat = terminat;
     }
 }

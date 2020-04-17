@@ -50,6 +50,8 @@ public class RoundController {
         Round round = roundService.getRoundByRoundNr(game, roundNr);
         Hand curentHand = handService.getCurentHand(round, round.getCurentHand());
         handService.sendCard(player, cardId, curentHand);
+        handService.verificaManaCompleta(game, curentHand, round);
+        roundService.verificaRoundaCompleta(game, round);
         return "redirect:/game/" + game.get_id() + "/" + roundNr;
     }
 }
