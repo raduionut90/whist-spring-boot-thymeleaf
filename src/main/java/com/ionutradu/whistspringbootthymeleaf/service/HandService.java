@@ -30,21 +30,29 @@ public class HandService {
     private RoundService roundService;
 
 
-    public Hand getCurentHand(Round round, int curentHand) {
-        String handId = round.getHandsList().get(curentHand);
+    public Hand getCurentHand(Round round) {
+        int curentHandNr = round.getCurentHand();
+        String handId = round.getHandsList().get(curentHandNr);
         return handRepository.findById(handId).orElse(null);
     }
 
     public void sendCard(Player player, String cardId, Hand curentHand) {
+        int culoare = cardService.findById(cardId).getCuloare();
+        //map<idJucator, idCarte>
         Map<String, String> mapSendCards = curentHand.getCartiJucatori();
 
-        if (mapSendCards.get(player.get_id()) == null) {
-            mapSendCards.put(player.get_id(), cardId);
-            curentHand.setCartiJucatori(mapSendCards);
-            handRepository.save(curentHand);
-            playerService.removeSendedCard(player, cardId);
-
+        //verific daca nu cumva a dat deja carte
+        if (mapSendCards.get(player.get_id()) != null) {
+            return;
         }
+        //verific daca este primul jucator care da carte si stabilesc culoarea
+        if (mapSendCards.size() == 0){
+            curentHand.setCuloare(culoare);
+        }
+        mapSendCards.put(player.get_id(), cardId);
+        curentHand.setCartiJucatori(mapSendCards);
+        handRepository.save(curentHand);
+        playerService.removeSendedCard(player, cardId);
     }
 
     public void save(Hand hand) {
@@ -64,23 +72,27 @@ public class HandService {
             Card castigatoareAtu = cardList.stream()
                     .filter(carte -> carte.getCuloare() == atu.getCuloare())
                     .max(Comparator.comparingInt(Card::getValoare)).orElse(null);
-            idWinner = castigatorByCard(hand, castigatoareAtu);
-
-        } else if (idWinner == null){
-            Card primaCarte = cardService.findById(hand.getCuloare());
-            Card castigatoarePrima = cardList.stream()
-                    .filter(carte -> carte.getCuloare() == primaCarte.getCuloare())
-                    .max(Comparator.comparingInt(Card::getValoare)).orElse(null);
-            idWinner = castigatorByCard(hand, castigatoarePrima);
+            if (castigatoareAtu != null) {
+                idWinner = castigatorByCard(hand, castigatoareAtu);
+            } else {
+                Card castigatoarePrima = cardList.stream()
+                        .filter(carte -> carte.getCuloare() == hand.getCuloare())
+                        .max(Comparator.comparingInt(Card::getValoare)).orElse(null);
+                idWinner = castigatorByCard(hand, castigatoarePrima);
+            }
         }
         return idWinner;
     }
 
     private String castigatorByCard(Hand hand, Card winnerCard) {
-        String idCastigator = hand.getCartiJucatori().entrySet().stream()
-                .filter(entry -> winnerCard.getId().equals(entry.getValue()))
-                .map(Map.Entry::getKey).findAny().orElse(null);
-        return idCastigator;
+        String value = winnerCard.getId();
+        Map<String, String> mapCarti = hand.getCartiJucatori();
+        String id = mapCarti.entrySet()
+                .stream()
+                .filter(entry -> value.equals(entry.getValue()))
+                .map(Map.Entry::getKey)
+                .findAny().orElse(null);
+        return id;
     }
 
     public void verificaManaCompleta(Game game, Hand curentHand, Round round) {
@@ -88,6 +100,23 @@ public class HandService {
             String idWinner = verificaCastigator(curentHand, round);
             gameService.ordoneazaJucatoriiInFunctieDeCastigator(game, idWinner);
             roundService.contorizeazaCastigatori(round, idWinner, curentHand);
+            curentHand.setIdWinner(idWinner);
+            curentHand.setTerminat(true);
+            handRepository.save(curentHand);
+            roundService.setCurentHand(round);
+        }
+    }
+
+    public Hand getRecentHand(Round curentRound) {
+        int recentHandNr = curentRound.getCurentHand() - 1;
+        if (recentHandNr >= 0){
+            return handRepository.findById(curentRound.getHandsList().get(recentHandNr)).orElse(null);
+        } else {
+            Game game = gameService.findGameByRound(curentRound);
+            String recentRoundId = game.getRoundsList().get(game.getCurentRound() - 1);
+            Round recentRound = roundService.findById(recentRoundId);
+            String recentHandId = recentRound.getHandsList().get(recentRound.getHandsList().size() - 1);
+            return handRepository.findById(recentHandId).orElse(null);
         }
     }
 }

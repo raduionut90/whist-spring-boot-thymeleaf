@@ -14,8 +14,9 @@ public class Hand {
     private String id;
 
     private String atu;
-    private String culoare; //primaCarte
+    private int culoare; //primaCarte
     private boolean terminat;
+    private String idWinner;
 
     // map tip <PlayerID, CardID>
     private Map<String, String> cartiJucatori = new LinkedHashMap<>();
@@ -41,11 +42,11 @@ public class Hand {
         this.atu = atu;
     }
 
-    public String getCuloare() {
+    public int getCuloare() {
         return culoare;
     }
 
-    public void setCuloare(String culoare) {
+    public void setCuloare(int culoare) {
         this.culoare = culoare;
     }
 
@@ -63,5 +64,13 @@ public class Hand {
 
     public void setTerminat(boolean terminat) {
         this.terminat = terminat;
+    }
+
+    public String getIdWinner() {
+        return idWinner;
+    }
+
+    public void setIdWinner(String idWinner) {
+        this.idWinner = idWinner;
     }
 }

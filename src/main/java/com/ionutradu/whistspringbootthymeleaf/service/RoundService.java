@@ -10,8 +10,7 @@ import com.ionutradu.whistspringbootthymeleaf.repository.RoundRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class RoundService {
@@ -66,8 +65,8 @@ public class RoundService {
         roundRepository.save(round);
     }
 
-    public Round getRoundByRoundNr(Game game, int roundNr) {
-        String roundId = game.getRoundsList().get(roundNr);
+    public Round getCurentRoundByGame(Game game) {
+        String roundId = game.getRoundsList().get(game.getCurentRound());
         Round round = roundRepository.findById(roundId);
         return round;
     }
@@ -162,7 +161,6 @@ public class RoundService {
             round.getMainiCastigate().replace(idWinner, value + 1);
         }
         roundRepository.save(round);
-        curentHand.setTerminat(true);
         handService.save(curentHand);
     }
 
@@ -170,14 +168,16 @@ public class RoundService {
         for (String playerId : round.getMapVotate().keySet()) {
 
             int votate = round.getMapVotate().get(playerId);
-            int castigate = round.getMainiCastigate().get(playerId);
-
+            int castigate = 0;
+            if (round.getMainiCastigate().containsKey(playerId)) {
+                castigate = round.getMainiCastigate().get(playerId);
+            }
             Player player = playerService.findById(playerId);
             int puncte = player.getPuncteCastigate();
 
             if(votate == castigate){
                 player.setPuncteCastigate(puncte + 5 + castigate);
-            } else{
+            } else {
                 player.setPuncteCastigate(puncte-Math.abs(votate-castigate));
             }
             playerService.save(player);
@@ -188,16 +188,51 @@ public class RoundService {
         boolean isRundaCompleta = true;
         for (String idPlayer : game.getPlayersList()) {
             Player player = playerService.findById(idPlayer);
-            if (player.getCartiCurente() != null){
-                isRundaCompleta = false;
+            if (player.getCartiCurente().size() != 0){
+                return;
             }
         }
         if (isRundaCompleta && !round.isTerminat()) {
             calculeazaPunctaj(round);
             round.setTerminat(true);
             roundRepository.save(round);
+            gameService.setCurentRound(game);
         }
     }
 
 
+    public List<Player> jucatoriCareAuVotat(Round curentRound) {
+        List<Player> playerList = new ArrayList<>();
+        for (String playerId :
+                curentRound.getMapVotate().keySet()) {
+            Player player = playerService.findById(playerId);
+            playerList.add(player);
+        }
+        return playerList;
+    }
+
+    public List<Integer> catePoateVotaLast(Round round, Player player){
+        List<Integer> integerList = new ArrayList<>();
+        for (int i = 0; i <= round.getNrMaini(); i++) {
+            integerList.add(i);
+        }
+        int interzis = round.getNrMaini() - round.getVotatePanaAcum();
+
+        Iterator<Integer> it = integerList.iterator();
+        while (it.hasNext()) {
+            if (it.next() == interzis) {
+                it.remove();
+            }
+        }
+        return integerList;
+    }
+
+    public void setCurentHand(Round round) {
+        int curentHand = round.getCurentHand();
+        int nextHand = curentHand + 1;
+        if (nextHand < round.getHandsList().size()){
+            round.setCurentHand(nextHand);
+        }
+        roundRepository.save(round);
+    }
 }

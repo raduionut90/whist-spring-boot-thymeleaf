@@ -160,4 +160,17 @@ public class GameService {
         playerService.playerSetFlag(game.getPlayersList());
 
     }
+
+    public void setCurentRound(Game game) {
+        int curentRound = game.getCurentRound();
+        curentRound++;
+        if (curentRound < game.getRoundsList().size()){
+            game.setCurentRound(curentRound);
+            gameRepository.save(game);
+        }
+    }
+
+    public Game findGameByRound(Round curentRound) {
+        return gameRepository.findGameByRoundsListContains(curentRound.getId());
+    }
 }

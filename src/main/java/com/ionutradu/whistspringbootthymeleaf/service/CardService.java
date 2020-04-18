@@ -52,4 +52,9 @@ public class CardService {
         }
         return cardList;
     }
+
+    public Card carteCastigatoare(Hand hand){
+        return findById(hand.getCartiJucatori().get(hand.getIdWinner()));
+    }
+
 }

@@ -44,7 +44,6 @@ public class GameController {
         Game game = gameService.findById(gameId);
         gameService.joinPlayer(game.get_id(), authentication);
         return "redirect:/game/" + game.get_id() + "/wait";
-
     }
 
 
@@ -58,10 +57,10 @@ public class GameController {
         return "game/waitforplayers";
     }
 
-    @GetMapping("/{gameId}/{roundNr}")
-    public String start(@PathVariable String gameId, @PathVariable int roundNr, Authentication authentication, Model model){
+    @GetMapping("/{gameId}")
+    public String start(@PathVariable String gameId, Authentication authentication, Model model){
         Game game = gameService.findById(gameId);
-        Round curentRound = roundService.getRoundByRoundNr(game, roundNr);
+        Round curentRound = roundService.getCurentRoundByGame(game);
         roundService.distribuieCarti(curentRound);
         Card atu = cardService.getAtu(curentRound);
 
@@ -70,26 +69,29 @@ public class GameController {
 
         boolean eRandulMeu = roundService.eRandulMeu(game, curentRound, curentPlayer);
 
-        int curentHandNr = curentRound.getCurentHand();
-        Hand curentHand = handService.getCurentHand(curentRound, curentHandNr);
+        Hand curentHand = handService.getCurentHand(curentRound);
+        Hand recentHand = handService.getRecentHand(curentRound);
         Card sendedCard = handService.getSendedCard(curentHand, curentPlayer);
 
         boolean eRandulMeuSaDauCarte = roundService.eRandulMeuSaDauCarte(curentRound, curentHand, curentPlayer);
+        List<Player> jucatoriCareAuVotat = roundService.jucatoriCareAuVotat(curentRound);
 
         model.addAttribute("curentGame", game);
         model.addAttribute("atu", atu);
         model.addAttribute("curentRound", curentRound);
-        model.addAttribute("roundNumber", roundNr);
         model.addAttribute("player", curentPlayer);
         model.addAttribute("curentCardList", curentCards);
         model.addAttribute("potSaVotez", eRandulMeu);
         model.addAttribute("curentHand", curentHand);
         model.addAttribute("sendedCards", sendedCard);
         model.addAttribute("potSaDauCarte", eRandulMeuSaDauCarte);
+        model.addAttribute("jucatoriCareAuVotat", jucatoriCareAuVotat);
+        model.addAttribute("playerService", playerService);
+        model.addAttribute("gameService", gameService);
+        model.addAttribute("roundService", roundService);
+        model.addAttribute("handService", handService);
+        model.addAttribute("cardService", cardService);
+        model.addAttribute("recentHand", recentHand);
         return "game/play";
     }
-
-
-
-
 }

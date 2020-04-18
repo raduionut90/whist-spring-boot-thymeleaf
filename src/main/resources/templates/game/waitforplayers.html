@@ -28,7 +28,7 @@
         </tbody>
     </table>
     <th th:if="${game.getPlayersList().size() == game.getPlayersNumber()}">
-        <a th:href="0">
+        <a th:href="'/game/' + ${gameId}">
             <input type="button" value="Start" class="btn btn-primary btn-sm mb-3"/>
         </a>
     </th>
