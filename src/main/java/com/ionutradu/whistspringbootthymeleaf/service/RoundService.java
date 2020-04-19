@@ -246,4 +246,13 @@ public class RoundService {
         }
         return playerList;
     }
+
+    public int punctajTabel(int votate, int castigate){
+        if (votate == castigate){
+            return (5 + votate);
+        }
+        else {
+            return -(Math.abs(votate - castigate));
+        }
+    }
 }
