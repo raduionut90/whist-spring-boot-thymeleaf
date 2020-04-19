@@ -61,26 +61,31 @@ public class GameController {
     public String start(@PathVariable String gameId, Authentication authentication, Model model){
         Game game = gameService.findById(gameId);
         Round curentRound = roundService.getCurentRoundByGame(game);
+        Round recentRound = roundService.getRecentRoundByGame(game);
         roundService.distribuieCarti(curentRound);
         Card atu = cardService.getAtu(curentRound);
 
         Player curentPlayer = playerService.getCurentPlayer(authentication);
-        List<Card> curentCards = cardService.getCurentCards(curentPlayer);
+//        List<Card> curentCards = cardService.getCurentCards(curentPlayer);
 
-        boolean eRandulMeu = roundService.eRandulMeu(game, curentRound, curentPlayer);
+        boolean eRandulMeu = roundService.eRandulMeu(game, curentRound.getMapVotate(), curentPlayer);
 
         Hand curentHand = handService.getCurentHand(curentRound);
         Hand recentHand = handService.getRecentHand(curentRound);
         Card sendedCard = handService.getSendedCard(curentHand, curentPlayer);
 
-        boolean eRandulMeuSaDauCarte = roundService.eRandulMeuSaDauCarte(curentRound, curentHand, curentPlayer);
+        boolean eRandulMeuSaDauCarte = roundService.eRandulMeu(game, curentHand.getCartiJucatori(), curentPlayer);
         List<Player> jucatoriCareAuVotat = roundService.jucatoriCareAuVotat(curentRound);
+        List<Player> jucatoriCareAuDatCarte = roundService.jucatoriCareAuDatCarte(curentHand);
+        List<Card> curentCards = handService.getCartiDisponibile(curentPlayer, curentHand);
+        List<Card> restCards = handService.getRestCarti(curentPlayer, curentCards);
 
         model.addAttribute("curentGame", game);
         model.addAttribute("atu", atu);
         model.addAttribute("curentRound", curentRound);
         model.addAttribute("player", curentPlayer);
         model.addAttribute("curentCardList", curentCards);
+        model.addAttribute("restCarti", restCards);
         model.addAttribute("potSaVotez", eRandulMeu);
         model.addAttribute("curentHand", curentHand);
         model.addAttribute("sendedCards", sendedCard);
@@ -92,6 +97,8 @@ public class GameController {
         model.addAttribute("handService", handService);
         model.addAttribute("cardService", cardService);
         model.addAttribute("recentHand", recentHand);
+        model.addAttribute("recentRound", recentRound);
+        model.addAttribute("jucatoriCareAuDatCarte", jucatoriCareAuDatCarte);
         return "game/play";
     }
 }

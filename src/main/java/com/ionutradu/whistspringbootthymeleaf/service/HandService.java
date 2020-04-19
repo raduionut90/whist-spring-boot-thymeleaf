@@ -5,10 +5,8 @@ import com.ionutradu.whistspringbootthymeleaf.repository.HandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -46,7 +44,7 @@ public class HandService {
             return;
         }
         //verific daca este primul jucator care da carte si stabilesc culoarea
-        if (mapSendCards.size() == 0){
+        if (mapSendCards.size() == 0) {
             curentHand.setCuloare(culoare);
         }
         mapSendCards.put(player.get_id(), cardId);
@@ -96,7 +94,7 @@ public class HandService {
     }
 
     public void verificaManaCompleta(Game game, Hand curentHand, Round round) {
-        if (curentHand.getCartiJucatori().size() == game.getPlayersNumber()){
+        if (curentHand.getCartiJucatori().size() == game.getPlayersNumber()) {
             String idWinner = verificaCastigator(curentHand, round);
             setflags(game, idWinner);
             roundService.contorizeazaCastigatori(round, idWinner, curentHand);
@@ -112,21 +110,24 @@ public class HandService {
         for (int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setFirst(false);
             playerList.get(i).setLast(false);
-            if (playerList.get(i).get_id().equals(idWinner)){
+            if (playerList.get(i).get_id().equals(idWinner)) {
                 playerList.get(i).setFirst(true);
-                if (i - 1 < 0){
-                    playerList.get(playerList.size()-1).setLast(true);
+                if (i - 1 < 0) {
+                    playerList.get(playerList.size() - 1).setLast(true);
+                    playerService.save(playerList.get(playerList.size() - 1));
                 } else {
                     playerList.get(i - 1).setLast(true);
+                    playerService.save(playerList.get(i - 1));
                 }
             }
+            playerService.save(playerList.get(i));
         }
 
     }
 
     public Hand getRecentHand(Round curentRound) {
         int recentHandNr = curentRound.getCurentHand() - 1;
-        if (recentHandNr >= 0){
+        if (recentHandNr >= 0) {
             return handRepository.findById(curentRound.getHandsList().get(recentHandNr)).orElse(null);
         } else {
             Game game = gameService.findGameByRound(curentRound);
@@ -139,4 +140,31 @@ public class HandService {
             return handRepository.findById(recentHandId).orElse(null);
         }
     }
+
+    public List<Card> getCartiDisponibile(Player curentPlayer, Hand hand) {
+        List<Card> carti = cardService.getCurentCards(curentPlayer);
+
+        List<Card> cartiCuloare = carti.stream()
+                .filter(card -> card.getCuloare() == hand.getCuloare())
+                .collect(Collectors.toList());
+
+        List<Card> cartiAtu = carti.stream()
+                .filter(card -> card.getCuloare() == cardService.findById(hand.getAtu()).getCuloare())
+                .collect(Collectors.toList());
+
+        if (curentPlayer.isFirst() || cartiCuloare.size() == 0 && cartiAtu .size() == 0) {
+            return carti;
+        } else if (cartiCuloare.size() != 0) {
+            return cartiCuloare;
+        } else {
+            return cartiAtu;
+        }
+    }
+
+    public List<Card> getRestCarti(Player curentPlayer, List<Card> cartiDisponibile) {
+        List<Card> carti = cardService.getCurentCards(curentPlayer);
+        carti.removeAll(cartiDisponibile);
+        return carti;
+    }
+
 }

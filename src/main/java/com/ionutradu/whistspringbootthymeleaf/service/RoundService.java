@@ -72,10 +72,10 @@ public class RoundService {
     }
 
     //pentru a vota
-    public boolean eRandulMeu(Game game, Round round, Player player) {
+    public boolean eRandulMeu(Game game, Map map, Player player) {
         boolean result = false;
         //verific daca nu cumva am votat deja
-        if (round.getMapVotate().get(player.get_id()) != null) {
+        if (map.get(player.get_id()) != null) {
             return false;
         }
 
@@ -91,7 +91,7 @@ public class RoundService {
         String idPlayerAnterior = game.getPlayersList().get(playerAnterior);
 
         //verific daca jucatorul aterior a votat
-        if (round.getMapVotate().containsKey(idPlayerAnterior)) {
+        if (map.containsKey(idPlayerAnterior)) {
             result = true;
         } else {
             result = false;
@@ -110,37 +110,6 @@ public class RoundService {
             }
         }
         return playerNrInList;
-    }
-
-    public boolean eRandulMeuSaDauCarte(Round round, Hand hand, Player player){
-        boolean result = false;
-        Game game = gameService.gameByRoundId(round);
-        //verific dca au votat toti jucatorii
-        if (round.getMapVotate().size() != game.getPlayersNumber()){
-            return false;
-        }
-        //verific daca sunt primul
-        if (player.isFirst()){
-            return true;
-        }
-        //verific daca am dat deja carte
-        if (hand.getCartiJucatori().containsKey(player.get_id())){
-            return false;
-        }
-        //aflu nr. de ordine in game.playerList si verific daca jucatorul anterior a dat carte
-        //verific ce nr are jucatorul in lista game
-        int playerNrInList = returnOrder(game, player);
-
-        //aflu id jucator anterior
-        String idPlayerAnterior = game.getPlayersList().get(playerNrInList - 1);
-
-        //verific daca jucatorul aterior a votat
-        if (hand.getCartiJucatori().containsKey(idPlayerAnterior)) {
-            result = true;
-        } else {
-            result = false;
-        }
-        return result;
     }
 
     public void save(Round round) {
@@ -213,11 +182,11 @@ public class RoundService {
             playerService.save(player);
         }
 
-        Player willBeFirst = playerList.get(index + 1 % playerList.size());
+        Player willBeFirst = playerList.get((index + 1) % playerList.size());
         willBeFirst.setFirst(true);
         playerService.save(willBeFirst);
 
-        Player willBeLast = playerList.get(index + playerList.size() % playerList.size());
+        Player willBeLast = playerList.get(index % playerList.size());
         willBeLast.setLast(true);
         playerService.save(willBeLast);
 
@@ -257,5 +226,24 @@ public class RoundService {
             round.setCurentHand(nextHand);
         }
         roundRepository.save(round);
+    }
+
+    public Round getRecentRoundByGame(Game game) {
+        if (game.getCurentRound() != 0) {
+            String roundId = game.getRoundsList().get(game.getCurentRound() - 1);
+            Round round = roundRepository.findById(roundId);
+            return round;
+        }
+        return null;
+    }
+
+    public List<Player> jucatoriCareAuDatCarte(Hand curentHand) {
+        List<Player> playerList = new ArrayList<>();
+        for (String playerId :
+                curentHand.getCartiJucatori().keySet()) {
+            Player player = playerService.findById(playerId);
+            playerList.add(player);
+        }
+        return playerList;
     }
 }

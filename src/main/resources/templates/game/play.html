@@ -20,21 +20,26 @@
 </head>
 <body>
 <div th:insert="/fragments/template :: navbar" />
-<div class="container col-6">
-    <div class="alert alert-secondary">
-        <p th:text="'Runda curenta : ' + ${curentGame.getCurentRound()} + ', Numar de maini : ' + ${curentRound.getNrMaini()} + ', Mana curenta : ' + ${curentRound.getCurentHand()}" />
-    </div>
+<div class="row">
+
+<div class="container col-5">
+
+<div class="alert alert-secondary">
+    <h5 th:text="'Runda ' + ${curentGame.getCurentRound()}" />
+    <p th:text="'Numar de maini : ' + ${curentRound.getNrMaini()} + ', Mana curenta : ' + ${curentRound.getCurentHand()}" />
     <div>
-            <p th:text="'Votate pana acum: ' + ${curentRound.getVotatePanaAcum()}" />
-            <p th:text="'ATU is: ' + ${atu.toString()}" />
-            <p th:text="'Cartile tale sunt: '"/>
-            <span th:each="card : ${curentCardList}" th:text="${card.toString()}" />
+        <p th:text="'Votate pana acum: ' + ${curentRound.getVotatePanaAcum()}" />
+        <p th:text="'ATU is: ' + ${atu.toString()}" />
+        <span th:text="'Cartile tale sunt: '" />
+        <span th:each="card : ${curentCardList}" th:text="${card.toString()} + ', '" />
+        <span th:each="card : ${restCarti}" th:text="${card.toString()} + ', '" />
     </div>
 </div>
 <br>
 
 <!--VOTUL-->
-<div class="container col-6">
+<div class="alert alert-info">
+    <h6>Etapa votului</h6>
     <form th:if="${curentRound.getMapVotate().get(player.get_id()) == null && potSaVotez == true}" th:action="@{/round/votate}" th:method="POST" id="sendVote" onclick="sendVote();">
         <p>Cate maini crezi ca o sa castigi?</p>
         <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
@@ -58,14 +63,14 @@
     </form>
 
 <!--DACA NU ESTE RANDUL TAU-->
-    <div th:if="${!curentRound.getMapVotate().containsKey(player.get_id()) && potSaVotez == false}" class="alert alert-info">
+    <div th:if="${!curentRound.getMapVotate().containsKey(player.get_id()) && potSaVotez == false}">
         <strong>Info!</strong> Nu este randul tau! asteapta sa voteze cei dinaintea ta.
         <p th:each="playerVot : ${jucatoriCareAuVotat}" th:text="${playerVot.getNume()} + ' a votat ' + ${curentRound.getMapVotate().get(playerVot.get_id())}" />
     </div>
 
 <!--    DUPA CE AI VOTAT-->
     <div th:if="${curentRound.getMapVotate().get(player.get_id()) != null &&
-            curentRound.getMapVotate().size() != curentGame.getPlayersNumber()}" class="alert alert-info">
+            curentRound.getMapVotate().size() != curentGame.getPlayersNumber()}" >
         <strong>Info!</strong>
         <p th:text="'Ai votat ' + ${curentRound.getMapVotate().get(player.get_id())} + '. Asteptam sa voteze toti jucatorii.'" />
         <p th:each="playerVot : ${jucatoriCareAuVotat}" th:text="${playerVot.getNume()} + ' a votat ' + ${curentRound.getMapVotate().get(playerVot.get_id())}" />
@@ -75,8 +80,9 @@
 
 
 <!--SOLICITA CARTI-->
-<div th:if="${curentRound.getMapVotate().size() == curentGame.getPlayersNumber()}" class="container col-6 alert alert-danger">
-<!--    Nu este randul tau-->
+<div th:if="${curentRound.getMapVotate().size() == curentGame.getPlayersNumber()}" class="alert alert-danger">
+<h6>Etapa cartilor</h6>
+    <!--    Nu este randul tau-->
     <div th:if="${potSaDauCarte == false && sendedCards == null}">
         <span th:text="'Inca nu este randul tau sa dai carte'" />
     </div>
@@ -84,12 +90,16 @@
 <!--    ACUM ESTE RANDUL TAU-->
     <div th:if="${potSaDauCarte}">
         <p th:text="'Ai votat ' + ${curentRound.getMapVotate().get(player.get_id())}"/>
+        <p th:each="jucator : ${jucatoriCareAuDatCarte}"
+           th:if="${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id())) != null && !jucator.getNume().equals(player.getNume())}"
+           th:text="${jucator.getNume()} + ' a dat cartea ' + ${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id()))}" />
         <p>Ce carte dai ?</p>
-        <form th:each="card : ${curentCardList}" th:action="@{/round/sendCard}" th:method="POST">
+        <form th:each="card : ${curentCardList}" th:action="@{/round/sendCard}" th:method="POST" class="d-inline">
             <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
             <input th:type="hidden" th:name="cardId" th:value="${card.getId()}"/>
             <input th:type="submit" th:value="${card.toString()}" class="btn btn-primary">
         </form>
+        <input th:each="card : ${restCarti}" th:type="submit" th:value="${card.toString()}" class="btn btn-outline-danger">
     </div>
 
 <!--    DUPA CE AI DAT-->
@@ -98,20 +108,12 @@
     </div>
 </div>
 <br>
-
-
-<!--FINAL DE MANA-->
-<div th:if="${curentRound.getMapVotate() == curentGame.getPlayersNumber()}" class="container col-6 alert alert-warning">
-        <p th:if="${curentHand.isTerminat()}"
-           th:text="'Aceasta mana a fost castigata de ' + ${playerService.findById(curentHand.getIdWinner())} + ' cu '
-           + ${cardService.carteCastigatoare(curentHand)}"/>
-        <p th:each="jucator : ${roundService.jucatoriCareAuVotat(curentRound)}"
-           th:if="${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id())) != null && !jucator.getNume().equals(player.getNume())}"
-           th:text="${jucator.getNume()} + ' a dat cartea ' + ${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id()))}" />
 </div>
 
+<div class="container col-5">
 <!--Rezumat mana anterioara-->
-<div th:if="${curentGame.getCurentRound() > 0}" class="container col-6 alert alert-dark">
+<div th:if="${curentGame.getCurentRound() > 0}" class="alert alert-dark">
+    <h6>Rezumat mana anterioara</h6>
         <p th:text="'Mana anterioara a fost castigata de ' + ${playerService.findById(recentHand.getIdWinner())} + ' cu '
            + ${cardService.carteCastigatoare(recentHand)}"/>
     <p th:text="'Atu a fost ' + ${cardService.findById(recentHand.getAtu()).toString()}" />
@@ -120,10 +122,15 @@
            th:text="${jucator.getNume()} + ' a dat cartea ' + ${cardService.findById(recentHand.getCartiJucatori().get(jucator.get_id()))}" />
 </div>
 
-<form th:if="${curentRound.isTerminat()}" th:action="@{'/game/' + ${gameId}}">
-    <input th:type="submit" th:value="next" class="btn btn-primary">
-</form>
-
+<!--Rezumat runda anterioara-->
+<div th:if="${curentGame.getCurentRound() > 0}" class="col-6 alert alert-dark">
+    <h6>Rezumat runda anterioara</h6>
+    <p th:each="jucator : ${playerService.getAllPlayerFromGame(curentGame)}"
+       th:text="${jucator.getNume()} + ' a votat ' + ${recentRound.getMapVotate().get(jucator.get_id())} + ', a facut ' +
+            ${recentRound.getMainiCastigate().get(jucator.get_id())} + '. Total puncte: ' + ${jucator.getPuncteCastigate()}" />
+</div>
+</div>
+</div>
 <div th:insert="/fragments/template :: footer" />
 </body>
 </html>
