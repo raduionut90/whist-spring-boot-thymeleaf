@@ -140,27 +140,6 @@ public class GameService {
         gameRepository.save(game);
     }
 
-    public void ordoneazaJucatoriiInFunctieDeCastigator(Game game, String idWinner) {
-        List<String> playersIdList = game.getPlayersList();
-        List<String> tempList = new ArrayList<>();
-
-        int index = 0;
-        for (int i = 0; i < playersIdList.size(); i++) {
-            if (playersIdList.get(i).equals(idWinner)){
-                index = i;
-            }
-        }
-        for(int i=0; i < playersIdList.size(); i++){
-            tempList.add(i, playersIdList.get(index%playersIdList.size()));
-            index++;
-
-        }
-        game.setPlayersList(tempList);
-        gameRepository.save(game);
-        playerService.playerSetFlag(game.getPlayersList());
-
-    }
-
     public void setCurentRound(Game game) {
         int curentRound = game.getCurentRound();
         curentRound++;

@@ -87,7 +87,8 @@ public class RoundService {
         int playerNrInList = returnOrder(game, player);
 
         //aflu id jucator anterior
-        String idPlayerAnterior = game.getPlayersList().get(playerNrInList - 1);
+        int playerAnterior = (playerNrInList + game.getPlayersNumber() - 1) % game.getPlayersNumber();
+        String idPlayerAnterior = game.getPlayersList().get(playerAnterior);
 
         //verific daca jucatorul aterior a votat
         if (round.getMapVotate().containsKey(idPlayerAnterior)) {
@@ -196,8 +197,30 @@ public class RoundService {
             calculeazaPunctaj(round);
             round.setTerminat(true);
             roundRepository.save(round);
+            setflags(game);
             gameService.setCurentRound(game);
         }
+    }
+
+    private void setflags(Game game) {
+        List<Player> playerList = playerService.getAllPlayerFromGame(game);
+        int index = game.getCurentRound();
+
+        for (Player player :
+                playerList) {
+            player.setFirst(false);
+            player.setLast(false);
+            playerService.save(player);
+        }
+
+        Player willBeFirst = playerList.get(index + 1 % playerList.size());
+        willBeFirst.setFirst(true);
+        playerService.save(willBeFirst);
+
+        Player willBeLast = playerList.get(index + playerList.size() % playerList.size());
+        willBeLast.setLast(true);
+        playerService.save(willBeLast);
+
     }
 
 

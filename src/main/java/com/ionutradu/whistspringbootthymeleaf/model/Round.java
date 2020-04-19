@@ -132,4 +132,5 @@ public class Round {
     public void setTerminat(boolean terminat) {
         this.terminat = terminat;
     }
+
 }

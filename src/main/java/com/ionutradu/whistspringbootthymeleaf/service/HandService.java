@@ -98,7 +98,7 @@ public class HandService {
     public void verificaManaCompleta(Game game, Hand curentHand, Round round) {
         if (curentHand.getCartiJucatori().size() == game.getPlayersNumber()){
             String idWinner = verificaCastigator(curentHand, round);
-            gameService.ordoneazaJucatoriiInFunctieDeCastigator(game, idWinner);
+            setflags(game, idWinner);
             roundService.contorizeazaCastigatori(round, idWinner, curentHand);
             curentHand.setIdWinner(idWinner);
             curentHand.setTerminat(true);
@@ -107,12 +107,32 @@ public class HandService {
         }
     }
 
+    private void setflags(Game game, String idWinner) {
+        List<Player> playerList = playerService.getAllPlayerFromGame(game);
+        for (int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).setFirst(false);
+            playerList.get(i).setLast(false);
+            if (playerList.get(i).get_id().equals(idWinner)){
+                playerList.get(i).setFirst(true);
+                if (i - 1 < 0){
+                    playerList.get(playerList.size()-1).setLast(true);
+                } else {
+                    playerList.get(i - 1).setLast(true);
+                }
+            }
+        }
+
+    }
+
     public Hand getRecentHand(Round curentRound) {
         int recentHandNr = curentRound.getCurentHand() - 1;
         if (recentHandNr >= 0){
             return handRepository.findById(curentRound.getHandsList().get(recentHandNr)).orElse(null);
         } else {
             Game game = gameService.findGameByRound(curentRound);
+            if (game.getCurentRound() == 0) {
+                return null;
+            }
             String recentRoundId = game.getRoundsList().get(game.getCurentRound() - 1);
             Round recentRound = roundService.findById(recentRoundId);
             String recentHandId = recentRound.getHandsList().get(recentRound.getHandsList().size() - 1);
