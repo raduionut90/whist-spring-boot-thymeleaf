@@ -3,24 +3,16 @@
 <head>
     <meta charset="UTF-8" />
     <title>Whist - New Game Form</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
-    <script type="text/javascript">
-        var stompClient = null;
-
-        function sendVote() {
-            var from = document.getElementById('from').value;
-            var text = document.getElementById('text').value;
-            stompClient.send("/game", {},
-                JSON.stringify({'from':from, 'text':text}));
-        }
-    </script>
+    <script src="/webjars/jquery/3.1.1-1/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+    <script src="/js/app.js"></script>
 
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
 </head>
 <body>
 <div th:insert="/fragments/template :: navbar" />
-<div class="container mt-5">
+<div class="container mt-5" id="here">
     <div class="row">
 
         <div class="col-8">
@@ -39,9 +31,9 @@
             <br>
 
             <!--VOTUL-->
-            <div class="alert alert-info">
+            <div th:if="${curentRound.getMapVotate().get(player.get_id()) == null && potSaVotez == true}" class="alert alert-info">
                 <h6>Etapa votului</h6>
-                <form th:if="${curentRound.getMapVotate().get(player.get_id()) == null && potSaVotez == true}" th:action="@{/round/votate}" th:method="POST" id="sendVote" onclick="sendVote();">
+                <form th:action="@{/round/votate}" th:method="POST">
                     <p>Cate maini crezi ca o sa castigi?</p>
                     <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
 
@@ -78,6 +70,7 @@
 
                 </div>
             </div>
+            <p id="mesajNou"/>
 
 
             <!--SOLICITA CARTI-->
@@ -98,9 +91,12 @@
                     <form th:each="card : ${curentCardList}" th:action="@{/round/sendCard}" th:method="POST" class="d-inline">
                         <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
                         <input th:type="hidden" th:name="cardId" th:value="${card.getId()}"/>
-                        <input th:type="submit" th:value="${card.toString()}" class="btn btn-primary">
+                        <input type="hidden" name="playerName" th:value="${player.getNume()}" id="playerName">
+                        <input type="hidden" name="message" th:value="'Salut'" id="message">
+                        <input th:type="submit" th:value="${card.toString()}" class="btn btn-primary" id="sendinput">
                     </form>
-                    <input th:each="card : ${restCarti}" th:type="submit" th:value="${card.toString()}" class="btn btn-outline-danger">
+                    <input th:each="card : ${restCarti}" th:type="submit"
+                           th:value="${card.toString()}" class="btn btn-outline-danger">
                 </div>
 
                 <!--    DUPA CE AI DAT-->
