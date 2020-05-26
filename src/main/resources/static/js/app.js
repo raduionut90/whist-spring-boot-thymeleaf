@@ -10,17 +10,17 @@ $(document).ready(function(){
 
     stompClient.connect({}, function (frame) {
         stompClient.subscribe('/topic/message', function (getMessage) {
-
-            var messageJson = JSON.parse(getMessage.body);
-
-            $("#mesajNou").html("<p> " + messageJson.playerName + " </p>");
+            //
+            // var messageJson = JSON.parse(getMessage.body);
+            //
+            // $("#mesajNou").html("<p> " + messageJson.playerName + " </p>");
             $( "#here" ).load(window.location.href + " #here" );
 
 
         });
     });
 
-    $("#sendinput").click(function(){
+    $("input").click(function(){
 
         sendData2Socket();
 

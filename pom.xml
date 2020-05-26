@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>whist-spring-boot-thymeleaf</name>
     <description>Whist Card Game project for Spring Boot and Thymeleaf</description>
-
+    <packaging>war</packaging>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -91,20 +91,21 @@
             <artifactId>jquery</artifactId>
             <version>3.1.1-1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
+        <finalName>whist-v1.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-<!--            Spring Security plugin-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-war-plugin</artifactId>-->
-<!--                <version>3.2.3</version>-->
-<!--            </plugin>-->
 
         </plugins>
     </build>

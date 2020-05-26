@@ -31,9 +31,9 @@
             <br>
 
             <!--VOTUL-->
-            <div th:if="${curentRound.getMapVotate().get(player.get_id()) == null && potSaVotez == true}" class="alert alert-info">
+            <div class="alert alert-info">
                 <h6>Etapa votului</h6>
-                <form th:action="@{/round/votate}" th:method="POST">
+                <form th:if="${curentRound.getMapVotate().get(player.get_id()) == null && potSaVotez == true}"  th:action="@{/round/votate}" th:method="POST">
                     <p>Cate maini crezi ca o sa castigi?</p>
                     <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
 
@@ -70,23 +70,20 @@
 
                 </div>
             </div>
-            <p id="mesajNou"/>
-
 
             <!--SOLICITA CARTI-->
             <div th:if="${curentRound.getMapVotate().size() == curentGame.getPlayersNumber()}" class="alert alert-danger">
                 <h6>Etapa cartilor</h6>
+                <p th:each="jucator : ${jucatoriCareAuDatCarte}"
+                   th:if="${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id())) != null && !jucator.getNume().equals(player.getNume())}"
+                   th:text="${jucator.getNume()} + ' a dat cartea ' + ${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id()))}" />
                 <!--    Nu este randul tau-->
-                <div th:if="${potSaDauCarte == false && sendedCards == null}">
-                    <span th:text="'Inca nu este randul tau sa dai carte'" />
-                </div>
+                <p th:if="${potSaDauCarte == false && sendedCards == null}"
+                   th:text="'Inca nu este randul tau sa dai carte'" />
 
                 <!--    ACUM ESTE RANDUL TAU-->
                 <div th:if="${potSaDauCarte}">
                     <p th:text="'Ai votat ' + ${curentRound.getMapVotate().get(player.get_id())}"/>
-                    <p th:each="jucator : ${jucatoriCareAuDatCarte}"
-                       th:if="${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id())) != null && !jucator.getNume().equals(player.getNume())}"
-                       th:text="${jucator.getNume()} + ' a dat cartea ' + ${cardService.findById(curentHand.getCartiJucatori().get(jucator.get_id()))}" />
                     <p>Ce carte dai ?</p>
                     <form th:each="card : ${curentCardList}" th:action="@{/round/sendCard}" th:method="POST" class="d-inline">
                         <input th:type="hidden" th:name="gameId" th:value="${gameId}"/>
@@ -100,11 +97,10 @@
                 </div>
 
                 <!--    DUPA CE AI DAT-->
-                <div th:if="${sendedCards != null}">
-                    <span th:text="'Ai dat ' + ${sendedCards.toString()}" />
-                </div>
+                <p th:if="${sendedCards != null}"
+                   th:text="'Ai dat ' + ${sendedCards.toString()}" />
             </div>
-            <br>
+
         </div>
 
         <div class="col-4">
@@ -130,42 +126,42 @@
     </div>
     <div class="row">
         <div class="d-flex justify-content-center">
-        <table class="table text-center table-hover">
-            <thead>
-            <tr>
-                <th scope="col" rowspan="2" class="align-middle">Joc</th>
-                <th scope="col" colspan="3" class="border-left" th:each="idJucator : ${curentGame.getPlayersList()}" th:text="${playerService.findById(idJucator).getNume()}">First</th>
-            </tr>
-            <tr>
-                <th:block th:each="idJucator : ${curentGame.getPlayersList()}">
-                    <td class="border-left">Vot</td>
-                    <td>Win</td>
-                    <td>Pct</td>
-                </th:block>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="roundId : ${curentGame.getRoundsList()}">
-                <th scope="row" th:if="${roundService.findById(roundId).getMapVotate().size() != 0}" th:text="${roundService.findById(roundId).getNrMaini()}">1</th>
+            <table class="table text-center table-hover">
+                <thead>
+                <tr>
+                    <th scope="col" rowspan="2" class="align-middle">Joc</th>
+                    <th scope="col" colspan="3" class="border-left" th:each="idJucator : ${curentGame.getPlayersList()}" th:text="${playerService.findById(idJucator).getNume()}">First</th>
+                </tr>
+                <tr>
+                    <th:block th:each="idJucator : ${curentGame.getPlayersList()}">
+                        <td class="border-left">Vot</td>
+                        <td>Win</td>
+                        <td>Pct</td>
+                    </th:block>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="roundId : ${curentGame.getRoundsList()}">
+                    <th scope="row" th:if="${roundService.findById(roundId).getMapVotate().size() != 0}" th:text="${roundService.findById(roundId).getNrMaini()}">1</th>
 
-                <th:block th:each="idJucator : ${curentGame.getPlayersList()}">
-                    <td class="border-left" th:if="${roundService.findById(roundId).getMapVotate().size() != 0}" th:text="${roundService.findById(roundId).getMapVotate().get(idJucator)}">1</td>
+                    <th:block th:each="idJucator : ${curentGame.getPlayersList()}">
+                        <td class="border-left" th:if="${roundService.findById(roundId).getMapVotate().size() != 0}" th:text="${roundService.findById(roundId).getMapVotate().get(idJucator)}">1</td>
 
-                    <td th:if="${roundService.findById(roundId).getMainiCastigate().get(idJucator) != null}" th:text="${roundService.findById(roundId).getMainiCastigate().get(idJucator)}">2</td>
-                    <td th:if="${roundService.findById(roundId).getMainiCastigate().get(idJucator) == null && roundService.findById(roundId).getMapVotate().size() != 0}" th:text="0">2</td>
+                        <td th:if="${roundService.findById(roundId).getMainiCastigate().get(idJucator) != null}" th:text="${roundService.findById(roundId).getMainiCastigate().get(idJucator)}">2</td>
+                        <td th:if="${roundService.findById(roundId).getMainiCastigate().get(idJucator) == null && roundService.findById(roundId).getMapVotate().size() != 0}" th:text="0">2</td>
 
-                    <td th:if="${roundService.findById(roundId).getMapVotate().get(idJucator) != null &&
+                        <td th:if="${roundService.findById(roundId).getMapVotate().get(idJucator) != null &&
                     roundService.findById(roundId).getMainiCastigate().get(idJucator) != null}"
-                        th:text="${roundService.punctajTabel(roundService.findById(roundId).getMapVotate().get(idJucator), roundService.findById(roundId).getMainiCastigate().get(idJucator))}">3</td>
-                    <td th:if="${roundService.findById(roundId).getMapVotate().get(idJucator) != null &&
+                            th:text="${roundService.punctajTabel(roundService.findById(roundId).getMapVotate().get(idJucator), roundService.findById(roundId).getMainiCastigate().get(idJucator))}">3</td>
+                        <td th:if="${roundService.findById(roundId).getMapVotate().get(idJucator) != null &&
                     roundService.findById(roundId).getMainiCastigate().get(idJucator) == null}"
-                        th:text="${roundService.punctajTabel(roundService.findById(roundId).getMapVotate().get(idJucator), 0)}">3</td>
+                            th:text="${roundService.punctajTabel(roundService.findById(roundId).getMapVotate().get(idJucator), 0)}">3</td>
 
-                </th:block>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+                    </th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <div th:insert="/fragments/template :: footer" />
